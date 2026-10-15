@@ -53,8 +53,20 @@ git -C modules/lib/sdk-knx-iot-stack checkout --detach FETCH_HEAD
 
 This checks out the PR in your local workspace. Running `west update` later may replace it with the revision specified by the manifest.
 
-## Exercise 3: Build the actuator and sensor samples
+## Exercise 3: Add the applications to nRF Connect for VS Code
 
+Add the participant applications to the nRF Connect view one at a time. Do not add the applications under `solution/`.
+
+1. In the nRF Connect Welcome view, select **Open an existing application**.
+2. Browse to the workshop repository, select its top-level `actuator` folder, and click **Open**.
+3. When prompted, select **Add**.
+4. Repeat for the top-level `sensor` folder.
+
+![Selecting the top-level actuator folder using Open an existing application](images/Screenshot%202026-10-16%20012208.png)
+
+## Exercise 4: Build the actuator and sensor samples
+
+We want to test the actuator (acting as a light bulb) and the sensor (acting as the light switch) locally, without having to add them to an actual KNX network. 
 Use the workshop's hardcoded KNX and Thread settings for these initial builds. Make these changes only to the participant applications at the top level of the workshop repository; leave the applications under `solution/` unchanged.
 
 1. Open `actuator/prj.conf`. Copy the complete contents of `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf` to the bottom of the file.
