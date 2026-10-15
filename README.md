@@ -84,10 +84,10 @@ First, build both applications without flashing or starting them. This confirms 
 
 The hardcoded overlay files contain the same starter Thread dataset for everyone. If you leave it unchanged, multiple groups can end up using the same network settings. Choose a channel in the valid range and set a unique PAN ID and network key for your group. The actuator and sensor in your pair must use the same channel, PAN ID, and key. The network key is what prevents other groups from joining your network; a different channel or PAN ID alone does not provide privacy.
 
-1. In the top-level `actuator/prj.conf`, append the complete contents of `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf`.
-2. Repeat in the top-level `sensor/prj.conf`, using the exact same network configuration in `actuator/prj.conf` and `sensor/prj.conf`
-3. In both `prj.conf` files, customize the Thread settings copied from `overlay-thread-hardcoded.conf`:
-	- Set `CONFIG_OPENTHREAD_CHANNEL` to a channel from **11 through 26**, inclusive. Use the same channel in both applications.
+1. In the top-level `actuator/prj.conf`, append the complete contents of `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf`. (Note that we will *not* use `overlay-thread-otshell.conf` for now)
+2. Now, change your network credentials that you copied:
+    - Set `CONFIG_OPENTHREAD_CHANNEL` to a channel from **11 through 26**, inclusive. Use the same channel in both applications.
 	- Change `CONFIG_OPENTHREAD_PANID` from the template value `51966` to a PAN ID unique to your group, and use it in both applications.
 	- Replace `CONFIG_OPENTHREAD_NETWORKKEY` with a unique 16-byte key. Keep the template's colon-separated hexadecimal format and use exactly the same key in both applications. Do not share your key with other groups.
-4. Rebuild both applications using their existing build configurations and confirm that both builds succeed before proceeding to any network test.
+2. Repeat in the top-level `sensor/prj.conf`, using the exact same network configuration in `actuator/prj.conf` and `sensor/prj.conf`
+3. Rebuild both applications using their existing build configurations and confirm that both builds succeed before proceeding to any network test.
