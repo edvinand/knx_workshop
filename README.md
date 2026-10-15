@@ -38,7 +38,7 @@ To add the add-on to an existing NCS workspace using the CLI:
 
 We found compatibility issues with some KNX routers in Zephyr, so we need to apply this patch: [PR #6](https://github.com/nrfconnect/sdk-knx-iot-point-api-stack/pull/6).
 
-From the NCS workspace root, check that the stack has no local changes:
+From the NCS workspace root (folder called v3.4.0), check that the stack has no local changes:
 
 ```powershell
 git -C modules/lib/sdk-knx-iot-stack status --short
@@ -52,3 +52,12 @@ git -C modules/lib/sdk-knx-iot-stack checkout --detach FETCH_HEAD
 ```
 
 This checks out the PR in your local workspace. Running `west update` later may replace it with the revision specified by the manifest.
+
+## Exercise 3: Build the actuator and sensor samples
+
+Use the workshop's hardcoded KNX and Thread settings for these initial builds. Make these changes only to the participant applications at the top level of the workshop repository; leave the applications under `solution/` unchanged.
+
+1. Open `actuator/prj.conf`. Copy the complete contents of `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf` to the bottom of the file.
+2. Repeat for `sensor/prj.conf`, appending the contents of those same two files.
+3. In nRF Connect for VS Code, create a build configuration for each application. Use the same board target for both, matching the development kit. Both samples support `nrf54l15dk/nrf54l15/cpuapp`, `nrf54lm20dk/nrf54lm20a/cpuapp`, and `nrf54lm20dk/nrf54lm20b/cpuapp`.
+4. Build both applications and confirm that each build completes successfully.
