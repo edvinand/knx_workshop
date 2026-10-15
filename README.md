@@ -66,7 +66,7 @@ Add the participant applications to the nRF Connect view one at a time. Do not a
 
 ## Exercise 4: Build the actuator and sensor samples
 
-We want to test the actuator (acting as a light bulb) and the sensor (acting as the light switch) locally, without having to add them to an actual KNX network. 
+We want to test the actuator (acting as a light bulb) and the sensor (acting as the light switch) locally, without having to add them to an actual KNX network.
 Use the workshop's hardcoded KNX and Thread settings for these initial builds. Make these changes only to the participant applications at the top level of the workshop repository; leave the applications under `solution/` unchanged.
 
 1. Open `actuator/prj.conf`. Copy the complete contents of `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf` to the bottom of the file.
