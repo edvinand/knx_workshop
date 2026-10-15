@@ -6,7 +6,7 @@ Before starting the exercises, make sure you have:
 
 - [Visual Studio Code](https://code.visualstudio.com/download) installed.
 - The [nRF Connect for VS Code extension pack](https://marketplace.visualstudio.com/items?itemName=nordic-semiconductor.nrf-connect-extension-pack) installed.
-- The standalone `nrfutil` installed and available on your `PATH`; do not rely on the copy bundled with the NCS toolchain. On Windows, you can install it with `winget install nrfutil`. See the [nRF Util installation guide](https://docs.nordicsemi.com/r/bundle/nrfutil/page/guides/installing.html/installing-nrf-util-from-the-web-default) for other methods. Open a new PowerShell terminal and verify the installation with `nrfutil --version`.
+- Standalone [`nrfutil`](https://www.nordicsemi.com/Products/Development-tools/nRF-Util/Download) installed, with its location added to your computer's `PATH`. Verify it by running `nrfutil --version` from any directory.
 
 ## Exercise 1: Install the KNX IoT add-on
 
