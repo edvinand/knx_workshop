@@ -1,7 +1,27 @@
 # knx-hands-on
 Repository for KNX hands on guide
 
-## Exercise 1: Include PR #6
+## Exercise 1: Install the KNX IoT add-on
+
+The KNX IoT add-on requires nRF Connect SDK v3.4.0 and its toolchain. See the [software requirements](https://nrfconnectdocs.nordicsemi.com/addons/ncs-knx-iot/latest/setup.html#software-requirements) before starting.
+
+To add the add-on to an existing NCS workspace using the CLI:
+
+1. Open a terminal at the NCS workspace root, the directory containing `.west`.
+2. If the `ncs-knx-iot` directory is not already there, clone the add-on repository:
+
+	```powershell
+	git clone https://github.com/nrfconnect/ncs-knx-iot
+	```
+
+3. In a terminal with the NCS v3.4.0 toolchain available, set the workspace manifest to the add-on and update its projects:
+
+	```powershell
+	west config manifest.path ncs-knx-iot
+	west update
+	```
+
+## Exercise 2: Include PR #6
 
 The KNX IoT applications use the `sdk-knx-iot-stack` west project. Pull request [#6](https://github.com/nrfconnect/sdk-knx-iot-point-api-stack/pull/6) fixes how the stack handles Echo options in CoAP messages, which can prevent a KNX IoT Router from synchronizing with a device. Include the pull request in your local NCS workspace before continuing with the applications.
 
