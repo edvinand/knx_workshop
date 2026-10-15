@@ -21,11 +21,11 @@ To add the add-on to an existing NCS workspace using the CLI:
 	git clone https://github.com/nrfconnect/ncs-knx-iot
 	```
 
-3. In a terminal with the NCS v3.4.0 toolchain available, set the workspace manifest to the add-on and update its projects:
+3. Use standalone `nrfutil` to run both `west` commands with the NCS v3.4.0 toolchain:
 
 	```powershell
-	west config manifest.path ncs-knx-iot
-	west update
+	nrfutil sdk-manager toolchain launch --ncs-version v3.4.0 -- west config manifest.path ncs-knx-iot
+	nrfutil sdk-manager toolchain launch --ncs-version v3.4.0 -- west update
 	```
 
 ## Exercise 2: Include PR #6
