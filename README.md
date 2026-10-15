@@ -1,5 +1,12 @@
 # knx-hands-on
-Repository for KNX hands on guide
+
+## Prerequisites
+
+Before starting the exercises, make sure you have:
+
+- [Visual Studio Code](https://code.visualstudio.com/download) installed.
+- The [nRF Connect for VS Code extension pack](https://marketplace.visualstudio.com/items?itemName=nordic-semiconductor.nrf-connect-extension-pack) installed.
+- `nrfutil` installed and available on your `PATH`. See the [nRF Util installation guide](https://docs.nordicsemi.com/r/bundle/nrfutil/page/guides/installing.html/installing-nrf-util-from-the-web-default). nRF Util is included with the nRF Connect SDK v3.1.0 and later toolchains, so it does not need a separate install if you have installed the NCS v3.4.0 toolchain.
 
 ## Exercise 1: Install the KNX IoT add-on
 
