@@ -55,7 +55,7 @@ This checks out the PR in your local workspace. Running `west update` later may 
 
 ## Exercise 3: Add the applications to nRF Connect for VS Code
 
-Add the participant applications to the nRF Connect view one at a time. Do not add the applications under `solution/`.
+Add the applications to the nRF Connect view one at a time. Do not add the applications under `solution/`.
 
 1. In the nRF Connect Welcome view, select **Open an existing application**.
 2. Browse to the workshop repository, select its top-level `actuator` folder, and click **Open**.
@@ -66,7 +66,7 @@ Add the participant applications to the nRF Connect view one at a time. Do not a
 
 ## Exercise 4: Build the actuator and sensor samples
 
-First, build both participant applications without flashing or starting them. This confirms the initial configurations build before you set up a private Thread network in Exercise 5.
+First, build both applications without flashing or starting them. This confirms the initial configurations build before you set up a private Thread network in Exercise 5.
 
 1. In the nRF Connect view, under `actuator`, click **Add build configuration**. Set:
 	- **SDK:** nRF Connect SDK v3.4.0
@@ -85,7 +85,7 @@ First, build both participant applications without flashing or starting them. Th
 The hardcoded overlay files contain the same starter Thread dataset for everyone. If you leave it unchanged, multiple groups can end up using the same network settings. Choose a channel in the valid range and set a unique PAN ID and network key for your group. The actuator and sensor in your pair must use the same channel, PAN ID, and key. The network key is what prevents other groups from joining your network; a different channel or PAN ID alone does not provide privacy.
 
 1. In the top-level `actuator/prj.conf`, append the complete contents of `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf`.
-2. Repeat in the top-level `sensor/prj.conf`, using the same two files. Do not edit the files under `solution/` or change the common overlay templates.
+2. Repeat in the top-level `sensor/prj.conf`, using the exact same network configuration in `actuator/prj.conf` and `sensor/prj.conf`
 3. In both `prj.conf` files, customize the Thread settings copied from `overlay-thread-hardcoded.conf`:
 	- Set `CONFIG_OPENTHREAD_CHANNEL` to a channel from **11 through 26**, inclusive. Use the same channel in both applications.
 	- Change `CONFIG_OPENTHREAD_PANID` from the template value `51966` to a PAN ID unique to your group, and use it in both applications.
