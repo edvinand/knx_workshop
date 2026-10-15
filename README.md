@@ -62,7 +62,7 @@ Add the participant applications to the nRF Connect view one at a time. Do not a
 3. When prompted, select **Add**.
 4. Repeat for the top-level `sensor` folder.
 
-![Selecting the top-level actuator folder using Open an existing application](images/Screenshot%202026-10-16%20012208.png)
+![Selecting the top-level actuator folder using Open an existing application](images/add_existing_app.png)
 
 ## Exercise 4: Build the actuator and sensor samples
 
