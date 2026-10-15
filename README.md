@@ -71,5 +71,14 @@ Use the workshop's hardcoded KNX and Thread settings for these initial builds. M
 
 1. Open `actuator/prj.conf`. Copy the complete contents of `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf` to the bottom of the file.
 2. Repeat for `sensor/prj.conf`, appending the contents of those same two files.
-3. In nRF Connect for VS Code, create a build configuration for each application. Use the same board target for both, matching the development kit. Both samples support `nrf54l15dk/nrf54l15/cpuapp`, `nrf54lm20dk/nrf54lm20a/cpuapp`, and `nrf54lm20dk/nrf54lm20b/cpuapp`.
-4. Build both applications and confirm that each build completes successfully.
+3. In the nRF Connect view, under `actuator`, click **Add build configuration**. Set:
+	- **SDK:** nRF Connect SDK v3.4.0
+	- **Toolchain:** nRF Connect SDK Toolchain v3.4.0
+	- **Board target:** `nrf54l15dk/nrf54l15/cpuapp`
+
+	Leave all other options at their defaults. Scroll to the bottom and click **Generate and Build**.
+
+	![Adding a build configuration for the actuator application](images/add_build_configuration.png)
+
+4. Repeat for `sensor` with the same SDK, toolchain, board target, and default options. Click **Generate and Build** at the bottom.
+5. Confirm that both builds complete successfully.
