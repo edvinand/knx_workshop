@@ -117,3 +117,12 @@ For later application updates, use the normal **Flash** action. It replaces the 
 
 ![Selecting Erase and Flash to Board for the actuator application](images/flash_app.png)
 
+Now, on the nRF54L15 DK you should see that LED0 starts blinking. This means that it is looking for a Thread network with it's known credentials.
+
+Actuator application: If another device from the same netwprk was running nearby, it would join that, but since there isn't any other devices in this network, it will do so for around 30 seconds. After this, it will determine that there is no devices from the network around, and it will promote itself to the leader of the network, and it will shift from LED0 blinking to LED0 and LED1 being lit solid.
+
+Sensor application: Since this is a low powered node, it is not a REED (Router-Eligible End device), and it will not promote itself to a leader, but rather wait for another device to show up.
+
+If you paired up, and have one actuator and one sensor device using the same network credentials, you should eventually see that the two first leds will be lit solid after a while. At this point, you can press button 2 (note that this is the 3rd button) on the Sensor device to toggle the LED2 on the Actuator device.
+
+![nRF54L15 DK](images/nRF54L15DK.png)
