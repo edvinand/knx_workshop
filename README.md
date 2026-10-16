@@ -126,3 +126,23 @@ On the nRF54L15 DK, LED0 should start blinking while it looks for a Thread netwo
 If you paired up and have one actuator and one sensor using the same network credentials, LED0 and LED1 should eventually be lit solid on both DKs. Press **BUTTON 2** (the third physical button) on the sensor DK to toggle LED2 on the actuator DK.
 
 ![nRF54L15 DK](images/nRF54L15DK.png)
+
+Congratulations! You are running your first light switch and light bulb applications on the nRF54L15 DK.
+
+## Exercise 7: Add your device to an actual KNX network
+
+Before commissioning on a real KNX network, each device needs a unique KNX serial number from the assigned block `00fa22222XXX`. The `X` values are hexadecimal digits.
+
+### Proposed serial-number mapping
+
+The proposal is implemented in `solution/common/knx_credentials.c` and declared in `solution/common/knx_credentials.h`. Both solution applications include the source file in their CMake configuration. The helper is not yet called by either application; their current identity definitions still use fixed serial-number constants.
+
+The helper reads the 8-byte hardware DEVICEID using `hwinfo_get_device_id()`, converts the bytes to lowercase hexadecimal, and looks for an exact match in the known-device table copied from `images/IDs.txt`. That file contains 48 unique DEVICEIDs. A device not in the table returns `-ENOENT`; it is not assigned a fallback serial number.
+
+For a listed device, the serial number format is `00fa22222<role><suffix>`:
+
+- `7` identifies an LSSB sensor.
+- `9` identifies an LSAB actuator.
+- `<suffix>` is a stable two-digit hexadecimal value assigned in the order of `IDs.txt`, from `00` through `2f`.
+
+The unique DEVICEID lookup and suffix provide a distinct serial for every listed kit, while the role digit gives the same physical kit a different serial for its sensor and actuator roles. Before using this on a real network, the solution app must call the helper before registering its KNX device and use the returned serial number in its identity. The current serial constants are unchanged until that integration is made.
