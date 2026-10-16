@@ -8,6 +8,16 @@ Before starting the exercises, make sure you have:
 - The [nRF Connect for VS Code extension pack](https://marketplace.visualstudio.com/items?itemName=nordic-semiconductor.nrf-connect-extension-pack) installed.
 - Standalone [`nrfutil`](https://www.nordicsemi.com/Products/Development-tools/nRF-Util/Download) installed, with its location added to your computer's `PATH`. Verify it by running `nrfutil --version` from any directory.
 
+## Actuator application tour
+
+Use the top-level actuator as an example of how an application starts and hands off to the KNX IoT add-on:
+
+1. Start in `actuator/main.c`. Zephyr calls `main()`, which registers the actuator device profile with `app_register_device()` and then starts the application with `knx_app_start()`.
+2. Follow `app_register_device()` to `actuator/knx_actuator.c`. It registers `actuator_device` with `knx_device_register()`. That device definition holds the KNX identity (including the serial number), datapoints, functional blocks, and application callbacks. The optional hardcoded KNX preset is also defined here.
+3. `knx_app_start()` is provided by the KNX IoT add-on, not by `knx_actuator.c`. It initializes the shared KNX stack, applies the preset when hardcoded commissioning is enabled, sets up the board handlers, calls the actuator's initialization callback, and starts the KNX worker thread. Thread behavior is selected by the application configuration; it is not initialized in `knx_actuator.c`.
+
+After Thread attaches to a network, the KNX worker publishes the KNX service. When a KNX write changes the actuator's switch datapoint, its `actuator_on_write()` callback updates the corresponding LED.
+
 ## Exercise 1: Install the KNX IoT add-on
 
 The KNX IoT add-on requires nRF Connect SDK v3.4.0 and its toolchain. See the [software requirements](https://nrfconnectdocs.nordicsemi.com/addons/ncs-knx-iot/latest/setup.html#software-requirements) before starting.
