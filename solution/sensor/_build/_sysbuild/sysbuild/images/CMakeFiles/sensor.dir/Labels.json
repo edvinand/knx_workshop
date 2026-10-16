@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/CMakeFiles/sensor"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/CMakeFiles/sensor.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/CMakeFiles/sensor-complete.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-build.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-configure.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-download.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-install.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-mkdir.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-patch.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"sensor"
+		],
+		"name" : "sensor"
+	}
+}

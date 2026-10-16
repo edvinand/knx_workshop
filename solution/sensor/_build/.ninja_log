@@ -1,0 +1,19 @@
+# ninja log v7
+18	358	8138391050960207	_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-mkdir	3a39d8cfee66222
+18	358	8138391050960207	C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-mkdir	3a39d8cfee66222
+359	666	8138391054000209	_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-download	a21300647d26e963
+359	666	8138391054000209	C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-download	a21300647d26e963
+666	961	8138391056979282	_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-update	7108f898f223b7c8
+666	961	8138391056979282	C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-update	7108f898f223b7c8
+962	1279	8138391060163345	_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-patch	faf7c9ecd231d244
+962	1279	8138391060163345	C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-patch	faf7c9ecd231d244
+1280	1585	8138391063238614	_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-configure	832c2989098612bb
+1280	1585	8138391063238614	C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-configure	832c2989098612bb
+1585	221826	8138391063448567	_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-build	562a5a74bc492fea
+1585	221826	8138391063448567	C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-build	562a5a74bc492fea
+221826	222028	8138393265861158	_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-install	cb95080ccfe2c760
+221826	222028	8138393265861158	C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-install	cb95080ccfe2c760
+222028	222522	8138393272577890	_sysbuild/sysbuild/images/CMakeFiles/sensor-complete	b068c5812cdfa736
+222028	222522	8138393272577890	_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-done	b068c5812cdfa736
+222028	222522	8138393272577890	C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/CMakeFiles/sensor-complete	b068c5812cdfa736
+222028	222522	8138393272577890	C:/nordic/knx_workshop/solution/sensor/_build/_sysbuild/sysbuild/images/sensor-prefix/src/sensor-stamp/sensor-done	b068c5812cdfa736

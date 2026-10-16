@@ -1,0 +1,7 @@
+default: sensor
+build_dir: C:/nordic/knx_workshop/solution/sensor/_build
+domains:
+  - name: sensor
+    build_dir: C:/nordic/knx_workshop/solution/sensor/_build/sensor
+flash_order:
+  - sensor

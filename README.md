@@ -101,3 +101,19 @@ Use the top-level actuator as an example of how an application starts and hands 
 3. `knx_app_start()` is provided by the KNX IoT add-on, not by `knx_actuator.c`. It initializes the shared KNX stack, applies the preset when hardcoded commissioning is enabled, sets up the board handlers, calls the actuator's initialization callback, and starts the KNX worker thread. Thread behavior is selected by the application configuration; it is not initialized in `knx_actuator.c`.
 
 After Thread attaches to a network, the KNX worker publishes the KNX service. When a KNX write changes the actuator's switch datapoint, its `actuator_on_write()` callback updates the corresponding LED.
+
+
+## Exercise 6: Flash your application to your DK
+
+The actuator (light bulb) and sensor (light switch) need two DKs to test together. If you have only one, borrow a second DK or pair with another participant. Both DKs must use the same Thread network credentials.
+
+1. In the nRF Connect view, select the `actuator` or `sensor` build configuration under **Applications**.
+2. Under **Actions**, hover over the small icon to the right of **Flash** and confirm its tooltip says **Erase and Flash to Board**. Click it to erase the DK and flash the selected application. If prompted, select the DK to program.
+3. Repeat with the other application on the second DK.
+
+Use **Erase and Flash to Board** for this first programming. It erases all non-volatile memory on the selected DK before flashing the application. On the nRF54L15, this memory is RRAM. This also clears persistent Thread settings left by the preloaded Demo.
+
+For later application updates, use the normal **Flash** action. It replaces the application without erasing the stored Thread settings, so the device can reuse its existing network credentials when it starts.
+
+![Selecting Erase and Flash to Board for the actuator application](images/flash_app.png)
+

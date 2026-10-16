@@ -1,0 +1,21 @@
+# ninja log v7
+2	319	8138390837456192	tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-mkdir	45a4ae53378ea185
+2	319	8138390837456192	C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-mkdir	45a4ae53378ea185
+320	4526	8138390879476796	tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-download	762db8a18410a2e5
+320	4526	8138390879476796	C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-download	762db8a18410a2e5
+4527	4909	8138390879761975	tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-update	fb7a9424b7f41fe1
+4527	4909	8138390879761975	C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-update	fb7a9424b7f41fe1
+4909	5223	8138390886505119	tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-patch	58a1a4d91a4c264b
+4909	5223	8138390886505119	C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-patch	58a1a4d91a4c264b
+5223	5521	8138390889472152	tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-configure	4552edd19f5be758
+5223	5521	8138390889472152	C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-configure	4552edd19f5be758
+5521	5835	8138390892610112	tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-build	460993c697edcb1a
+5521	5835	8138390892610112	C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-build	460993c697edcb1a
+5835	6132	8138390895583246	tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-install	fc46af90d9a9d800
+5835	6132	8138390895583246	C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-install	fc46af90d9a9d800
+6132	6435	8138390898607385	tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-test	d79ec7bc91e0888a
+6132	6435	8138390898607385	C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-test	d79ec7bc91e0888a
+6435	6879	8138390903043700	CMakeFiles/tinycbor-populate-complete	111bd283ca08a8d1
+6435	6879	8138390903043700	tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-done	111bd283ca08a8d1
+6435	6879	8138390903043700	C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/CMakeFiles/tinycbor-populate-complete	111bd283ca08a8d1
+6435	6879	8138390903043700	C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-done	111bd283ca08a8d1

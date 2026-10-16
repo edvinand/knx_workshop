@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"C:/nordic/knx_workshop/solution/actuator/_build/actuator/_deps/tinycbor-subbuild/cmake_install.cmake"
+	],
+	"Parallel" : false
+}

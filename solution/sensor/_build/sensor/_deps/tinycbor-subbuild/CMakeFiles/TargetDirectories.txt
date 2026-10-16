@@ -1,0 +1,3 @@
+C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/CMakeFiles/tinycbor-populate.dir
+C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/CMakeFiles/edit_cache.dir
+C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/CMakeFiles/rebuild_cache.dir

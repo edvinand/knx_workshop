@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/nordic/knx_workshop/solution/actuator/_build/_sysbuild/sysbuild/images/CMakeFiles/actuator"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/actuator/_build/_sysbuild/sysbuild/images/CMakeFiles/actuator.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/actuator/_build/_sysbuild/sysbuild/images/CMakeFiles/actuator-complete.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/actuator/_build/_sysbuild/sysbuild/images/actuator-prefix/src/actuator-stamp/actuator-build.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/actuator/_build/_sysbuild/sysbuild/images/actuator-prefix/src/actuator-stamp/actuator-configure.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/actuator/_build/_sysbuild/sysbuild/images/actuator-prefix/src/actuator-stamp/actuator-download.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/actuator/_build/_sysbuild/sysbuild/images/actuator-prefix/src/actuator-stamp/actuator-install.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/actuator/_build/_sysbuild/sysbuild/images/actuator-prefix/src/actuator-stamp/actuator-mkdir.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/actuator/_build/_sysbuild/sysbuild/images/actuator-prefix/src/actuator-stamp/actuator-patch.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/actuator/_build/_sysbuild/sysbuild/images/actuator-prefix/src/actuator-stamp/actuator-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"actuator"
+		],
+		"name" : "actuator"
+	}
+}

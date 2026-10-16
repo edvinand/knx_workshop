@@ -1,0 +1,14 @@
+# WARNING. THIS FILE IS AUTO-GENERATED. DO NOT MODIFY!
+#
+# This file contains build system settings derived from your modules.
+#
+# Modules may be set via ZEPHYR_MODULES, ZEPHYR_EXTRA_MODULES,
+# and/or the west manifest file.
+#
+# See the Modules guide for more information.
+"SNIPPET_ROOT":"C:/nordic/SDKs/ncs/v3.4.0/ncs-knx-iot"
+"BOARD_ROOT":"C:/nordic/SDKs/ncs/v3.4.0/nrf"
+"DTS_ROOT":"C:/nordic/SDKs/ncs/v3.4.0/nrf"
+"SNIPPET_ROOT":"C:/nordic/SDKs/ncs/v3.4.0/nrf"
+"SOC_ROOT":"C:/nordic/SDKs/ncs/v3.4.0/nrf"
+"MODULE_EXT_ROOT":"C:/nordic/SDKs/ncs/v3.4.0/nrf"

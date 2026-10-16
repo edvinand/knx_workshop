@@ -1,0 +1,46 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/CMakeFiles/tinycbor-populate"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/CMakeFiles/tinycbor-populate.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/CMakeFiles/tinycbor-populate-complete.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-build.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-configure.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-download.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-install.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-mkdir.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-patch.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-test.rule"
+		},
+		{
+			"file" : "C:/nordic/knx_workshop/solution/sensor/_build/sensor/_deps/tinycbor-subbuild/tinycbor-populate-prefix/src/tinycbor-populate-stamp/tinycbor-populate-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"tinycbor-populate"
+		],
+		"name" : "tinycbor-populate"
+	}
+}

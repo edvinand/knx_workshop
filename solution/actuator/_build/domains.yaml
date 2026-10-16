@@ -1,0 +1,7 @@
+default: actuator
+build_dir: C:/nordic/knx_workshop/solution/actuator/_build
+domains:
+  - name: actuator
+    build_dir: C:/nordic/knx_workshop/solution/actuator/_build/actuator
+flash_order:
+  - actuator
