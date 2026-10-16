@@ -21,9 +21,11 @@
 #include <knx/knx_presets.h>
 #endif
 
+#include <zephyr/drivers/hwinfo.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/sys/util.h>
 
+#include "knx_credentials.h"
 #include "oc_knx_fp.h"
 
 LOG_MODULE_REGISTER(knx_actuator, LOG_LEVEL_INF);
@@ -44,7 +46,7 @@ static void actuator_set_light(size_t channel, bool on)
  * Identity. serialnumber and application_name are non-static because the
  * compiled libknx shell (port/zephyr/knx_shell.c) references them by name.
  */
-const char sn_lower_case[] = "00fa10020900";
+char sn_lower_case[KNX_CREDENTIALS_SERIAL_BUFFER_SIZE];
 const char application_name[] = "KNX virtual actuator (LSAB)";
 
 static const knx_identity_t actuator_identity = {
@@ -202,5 +204,21 @@ static const knx_device_t actuator_device = {
 
 void app_register_device(void)
 {
+	uint8_t device_id[KNX_CREDENTIALS_DEVICE_ID_SIZE];
+	ssize_t device_id_length = hwinfo_get_device_id(device_id, sizeof(device_id));
+
+	if (device_id_length != (ssize_t)sizeof(device_id)) {
+		LOG_ERR("Failed to read device ID: %d", (int)device_id_length);
+		return;
+	}
+
+	int err = knx_credentials_get_serial_number(device_id, KNX_CREDENTIALS_ROLE_LSAB,
+						    sn_lower_case, sizeof(sn_lower_case));
+	if (err < 0) {
+		LOG_ERR("Failed to assign KNX serial number: %d", err);
+		return;
+	}
+
+	LOG_INF("Assigned KNX serial number: %s", sn_lower_case);
 	knx_device_register(&actuator_device);
 }

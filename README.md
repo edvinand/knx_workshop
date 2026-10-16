@@ -133,16 +133,58 @@ Congratulations! You are running your first light switch and light bulb applicat
 
 Before commissioning on a real KNX network, each device needs a unique KNX serial number from the assigned block `00fa22222XXX`. The `X` values are hexadecimal digits.
 
-### Proposed serial-number mapping
+### Assign a unique KNX serial number
 
-The proposal is implemented in `solution/common/knx_credentials.c` and declared in `solution/common/knx_credentials.h`. Both solution applications include the source file in their CMake configuration. The helper is not yet called by either application; their current identity definitions still use fixed serial-number constants.
+The solution apps demonstrate this integration in `solution/actuator` and `solution/sensor`. Their shared `common/knx_credentials.c` and `common/knx_credentials.h` map the hardware's 8-byte DEVICEID to a KNX serial in the assigned block `00fa22222XXX`. The mapping uses explicit, stable suffixes and different role digits for LSSB and LSAB. Unknown DEVICEIDs are rejected; there is no fallback serial.
 
-The helper reads the 8-byte hardware DEVICEID using `hwinfo_get_device_id()`, converts the bytes to lowercase hexadecimal, and looks for an exact match in the known-device table copied from `images/IDs.txt`. That file contains 48 unique DEVICEIDs. A device not in the table returns `-ENOENT`; it is not assigned a fallback serial number.
+#### How the C and header files are included
 
-For a listed device, the serial number format is `00fa22222<role><suffix>`:
+The two files have different jobs:
 
-- `7` identifies an LSSB sensor.
-- `9` identifies an LSAB actuator.
-- `<suffix>` is a stable two-digit hexadecimal value assigned in the order of `IDs.txt`, from `00` through `2f`.
+- `knx_credentials.h` declares the function and constants. Add `#include "knx_credentials.h"` to the application source that calls it.
+- `knx_credentials.c` implements the function. It must be compiled into the application by listing it in `target_sources()` in `CMakeLists.txt`.
 
-The unique DEVICEID lookup and suffix provide a distinct serial for every listed kit, while the role digit gives the same physical kit a different serial for its sensor and actuator roles. Before using this on a real network, the solution app must call the helper before registering its KNX device and use the returned serial number in its identity. The current serial constants are unchanged until that integration is made.
+Before editing, open the application's `CMakeLists.txt`. Both actuator and sensor already include the shared `common` directory:
+
+```cmake
+target_include_directories(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../common)
+```
+
+That include path lets `knx_actuator.c` or `knx_sensor.c` use `#include "knx_credentials.h"` directly. Including a header does not compile its `.c` implementation; add `../common/knx_credentials.c` to the existing `target_sources(app PRIVATE ...)` list as well. The solution CMake files show the completed setup.
+
+#### Apply the mapping to the participant applications
+
+1. In both top-level `actuator/prj.conf` and `sensor/prj.conf`, add `CONFIG_HWINFO=y` so the app can read its hardware DEVICEID.
+2. When switching from the local hardcoded network to ETS, comment out—not delete—the hardcoded lines copied in Exercise 5. Comment out `CONFIG_KNX_HARDCODED_COMMISSIONING=y` and the fixed Thread settings (`CONFIG_OPENTHREAD_JOINER=n`, `CONFIG_OPENTHREAD_MANUAL_START=n`, `CONFIG_OPENTHREAD_PANID`, `CONFIG_OPENTHREAD_CHANNEL`, `CONFIG_OPENTHREAD_NETWORK_NAME`, `CONFIG_OPENTHREAD_XPANID`, and `CONFIG_OPENTHREAD_NETWORKKEY`). Keep the original Joiner settings enabled.
+3. In each app's `knx_actuator.c` or `knx_sensor.c`, add:
+
+   ```c
+   #include <zephyr/drivers/hwinfo.h>
+   #include "knx_credentials.h"
+   ```
+
+4. In each app's `CMakeLists.txt`, add `../common/knx_credentials.c` to its existing `target_sources(app PRIVATE ...)` list.
+5. Replace the fixed `sn_lower_case` string with a writable `KNX_CREDENTIALS_SERIAL_BUFFER_SIZE` buffer. In `app_register_device()`, before calling `knx_device_register()`, read the hardware ID and use the role-specific helper:
+
+   ```c
+   uint8_t device_id[KNX_CREDENTIALS_DEVICE_ID_SIZE];
+   ssize_t id_length = hwinfo_get_device_id(device_id, sizeof(device_id));
+   if (id_length != (ssize_t)sizeof(device_id)) {
+	   LOG_ERR("Failed to read device ID: %d", (int)id_length);
+	   return;
+   }
+
+   int err = knx_credentials_get_serial_number(
+	   device_id, KNX_CREDENTIALS_ROLE_LSAB, sn_lower_case, sizeof(sn_lower_case));
+   if (err < 0) {
+	   LOG_ERR("Failed to assign KNX serial number: %d", err);
+	   return;
+   }
+
+   LOG_INF("Assigned KNX serial number: %s", sn_lower_case);
+   knx_device_register(&actuator_device);
+   ```
+
+   Use `KNX_CREDENTIALS_ROLE_LSAB` with `actuator_device` and `KNX_CREDENTIALS_ROLE_LSSB` with `sensor_device`. Stop registration on any error, especially `-ENOENT` for an unlisted DEVICEID; do not assign a default serial.
+
+6. Rebuild and flash both applications. In nRF Connect Serial Terminal, open VCOM1 for each nRF54L15 DK at 115200 baud. After boot, confirm the log contains `Assigned KNX serial number: ...`. Match the J-Link serial printed on the DK with its `nRF DK XX` label beside that DEVICEID in `common/knx_credentials.c`; check that the generated KNX serial uses the label suffix and the correct role digit.
