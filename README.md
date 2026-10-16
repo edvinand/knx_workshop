@@ -117,12 +117,12 @@ For later application updates, use the normal **Flash** action. It replaces the 
 
 ![Selecting Erase and Flash to Board for the actuator application](images/flash_app.png)
 
-Now, on the nRF54L15 DK you should see that LED0 starts blinking. This means that it is looking for a Thread network with it's known credentials.
+On the nRF54L15 DK, LED0 should start blinking while it looks for a Thread network using its configured credentials.
 
-Actuator application: If another device from the same netwprk was running nearby, it would join that, but since there isn't any other devices in this network, it will do so for around 30 seconds. After this, it will determine that there is no devices from the network around, and it will promote itself to the leader of the network, and it will shift from LED0 blinking to LED0 and LED1 being lit solid.
+**Actuator:** If another device on the same network is nearby, the actuator should join it. Otherwise, after approximately 30–35 seconds, it should promote itself to network leader. LED0 will stop blinking, and LED0 and LED1 will be lit solid.
 
-Sensor application: Since this is a low powered node, it is not a REED (Router-Eligible End device), and it will not promote itself to a leader, but rather wait for another device to show up.
+**Sensor:** This is a low-power MTD Sleepy End Device, not a Router-Eligible End Device (REED), so it cannot become the leader. It waits for another device to appear on the network.
 
-If you paired up, and have one actuator and one sensor device using the same network credentials, you should eventually see that the two first leds will be lit solid after a while. At this point, you can press button 2 (note that this is the 3rd button) on the Sensor device to toggle the LED2 on the Actuator device.
+If you paired up and have one actuator and one sensor using the same network credentials, LED0 and LED1 should eventually be lit solid on both DKs. Press **BUTTON 2** (the third physical button) on the sensor DK to toggle LED2 on the actuator DK.
 
 ![nRF54L15 DK](images/nRF54L15DK.png)
