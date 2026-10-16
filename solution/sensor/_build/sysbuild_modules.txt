@@ -1,2 +1,0 @@
-"nrf":"C:/nordic/SDKs/ncs/v3.4.0/nrf":"C:/nordic/SDKs/ncs/v3.4.0/nrf/sysbuild"
-"mcuboot":"C:/nordic/SDKs/ncs/v3.4.0/bootloader/mcuboot":"C:/nordic/SDKs/ncs/v3.4.0/bootloader/mcuboot/boot/zephyr/sysbuild"
