@@ -45,6 +45,7 @@ static atomic_t pending_toggles[NUM_CHANNELS];
  * compiled libknx shell (port/zephyr/knx_shell.c) references them by name.
  */
 char sn_lower_case[KNX_CREDENTIALS_SERIAL_BUFFER_SIZE];
+static char thread_eui64[KNX_CREDENTIALS_EUI64_BUFFER_SIZE];
 const char application_name[] = "KNX virtual sensor (LSSB)";
 
 static const knx_identity_t sensor_identity = {
@@ -243,7 +244,13 @@ void app_register_device(void)
 		LOG_ERR("Failed to assign KNX serial number: %d", err);
 		return;
 	}
+	err = knx_credentials_get_thread_eui64(device_id, thread_eui64, sizeof(thread_eui64));
+	if (err < 0) {
+		LOG_ERR("Failed to format Thread EUI64: %d", err);
+		return;
+	}
 
 	LOG_INF("Assigned KNX serial number: %s", sn_lower_case);
+	LOG_INF("Thread EUI64: %s", thread_eui64);
 	knx_device_register(&sensor_device);
 }

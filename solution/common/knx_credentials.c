@@ -143,24 +143,3 @@ int knx_credentials_get_thread_eui64(
 
 	return 0;
 }
-
-int knx_credentials_get_thread_eui64(
-	const uint8_t device_id[KNX_CREDENTIALS_DEVICE_ID_SIZE], char *eui64, size_t eui64_size)
-{
-	if (device_id == NULL || eui64 == NULL) {
-		return -EINVAL;
-	}
-	if (eui64_size < KNX_CREDENTIALS_EUI64_BUFFER_SIZE) {
-		return -ENOSPC;
-	}
-
-	int written = snprintf(eui64, eui64_size, "f4ce36%02x%02x%02x%02x%02x",
-			device_id[3], device_id[2], device_id[1], device_id[0], device_id[7]);
-
-	if (written != KNX_CREDENTIALS_EUI64_BUFFER_SIZE - 1U) {
-		eui64[0] = '\0';
-		return -EIO;
-	}
-
-	return 0;
-}

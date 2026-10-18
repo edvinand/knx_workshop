@@ -135,7 +135,7 @@ Before commissioning on a real KNX network, each device needs a unique KNX seria
 
 ### Assign a unique KNX serial number
 
-The solution apps demonstrate this integration in `solution/actuator` and `solution/sensor`. Their shared `common/knx_credentials.c` and `common/knx_credentials.h` map the hardware's 8-byte DEVICEID to a KNX serial in the assigned block `00fa22222XXX`. The mapping uses explicit, stable suffixes and different role digits for LSSB and LSAB. Unknown DEVICEIDs are rejected; there is no fallback serial.
+The solution apps demonstrate this integration in `solution/actuator` and `solution/sensor`. Their shared `common/knx_credentials.c` and `common/knx_credentials.h` map the hardware's 8-byte DEVICEID to a KNX serial in the assigned block `00fa22222XXX` and format the expected Thread EUI64. The EUI64 comments use the nRF54L15 default OUI `f4ce36` and the DEVICEID conversion used by the current build. The serial mapping uses explicit, stable suffixes and different role digits for LSSB and LSAB. Unknown DEVICEIDs are rejected; there is no fallback serial.
 
 #### How the C and header files are included
 
@@ -181,10 +181,18 @@ That include path lets `knx_actuator.c` or `knx_sensor.c` use `#include "knx_cre
 	   return;
    }
 
+   char eui64[KNX_CREDENTIALS_EUI64_BUFFER_SIZE];
+   err = knx_credentials_get_thread_eui64(device_id, eui64, sizeof(eui64));
+   if (err < 0) {
+	   LOG_ERR("Failed to format Thread EUI64: %d", err);
+	   return;
+   }
+
    LOG_INF("Assigned KNX serial number: %s", sn_lower_case);
+   LOG_INF("Thread EUI64: %s", eui64);
    knx_device_register(&actuator_device);
    ```
 
-   Use `KNX_CREDENTIALS_ROLE_LSAB` with `actuator_device` and `KNX_CREDENTIALS_ROLE_LSSB` with `sensor_device`. Stop registration on any error, especially `-ENOENT` for an unlisted DEVICEID; do not assign a default serial.
+   Use `KNX_CREDENTIALS_ROLE_LSAB` with `actuator_device` and `KNX_CREDENTIALS_ROLE_LSSB` with `sensor_device`. Stop registration on any error, especially `-ENOENT` for an unlisted DEVICEID; do not assign a default serial. The EUI64 is formatted directly from the same DEVICEID, so this log can be produced in `app_register_device()` before the Thread stack starts. If the radio OUI or EUI64 configuration changes, update the formatter and expected EUI64 comments.
 
-6. Rebuild and flash both applications. In nRF Connect Serial Terminal, open VCOM1 for each nRF54L15 DK at 115200 baud. After boot, confirm the log contains `Assigned KNX serial number: ...`. Match the J-Link serial printed on the DK with its `nRF DK XX` label beside that DEVICEID in `common/knx_credentials.c`; check that the generated KNX serial uses the label suffix and the correct role digit.
+6. Rebuild and flash both applications. In nRF Connect Serial Terminal, open VCOM1 for each nRF54L15 DK at 115200 baud. After boot, confirm the log contains both `Assigned KNX serial number: ...` and `Thread EUI64: ...`. Match the J-Link serial printed on the DK with its `nRF DK XX` label beside that DEVICEID in `common/knx_credentials.c`; check that the generated KNX serial uses the label suffix and correct role digit, and that the logged EUI64 matches its table comment.
