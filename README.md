@@ -208,39 +208,88 @@ That include path lets `knx_actuator.c` or `knx_sensor.c` use `#include "knx_cre
    ```c
    void app_register_device(void)
    {
-	   uint8_t device_id[KNX_CREDENTIALS_DEVICE_ID_SIZE];
-	   ssize_t id_length = hwinfo_get_device_id(device_id, sizeof(device_id));
-	   if (id_length != (ssize_t)sizeof(device_id)) {
-		   LOG_ERR("Failed to read device ID: %d", (int)id_length);
-		   return;
-	   }
+   	uint8_t device_id[KNX_CREDENTIALS_DEVICE_ID_SIZE];
+   	ssize_t id_length = hwinfo_get_device_id(device_id, sizeof(device_id));
+   	if (id_length != (ssize_t)sizeof(device_id)) {
+   		LOG_ERR("Failed to read device ID: %d", (int)id_length);
+   		return;
+   	}
 
-	   int err = knx_credentials_get_serial_number(
-		   device_id, KNX_CREDENTIALS_ROLE_LSAB, sn_lower_case, sizeof(sn_lower_case));
-	   if (err < 0) {
-		   LOG_ERR("Failed to assign KNX serial number: %d", err);
-		   return;
-	   }
+   	int err = knx_credentials_get_serial_number(
+   		device_id, KNX_CREDENTIALS_ROLE_LSAB, sn_lower_case, sizeof(sn_lower_case));
+   	if (err < 0) {
+   		LOG_ERR("Failed to assign KNX serial number: %d", err);
+   		return;
+   	}
 
-	   char eui64[KNX_CREDENTIALS_EUI64_BUFFER_SIZE];
-	   err = knx_credentials_get_thread_eui64(device_id, eui64, sizeof(eui64));
-	   if (err < 0) {
-		   LOG_ERR("Failed to format Thread EUI64: %d", err);
-		   return;
-	   }
+   	char eui64[KNX_CREDENTIALS_EUI64_BUFFER_SIZE];
+   	err = knx_credentials_get_thread_eui64(device_id, eui64, sizeof(eui64));
+   	if (err < 0) {
+   		LOG_ERR("Failed to format Thread EUI64: %d", err);
+   		return;
+   	}
 
-	   LOG_INF("Assigned KNX serial number: %s", sn_lower_case);
-	   LOG_INF("Thread EUI64: %s", eui64);
-	   knx_device_register(&actuator_device);
+   	LOG_INF("Assigned KNX serial number: %s", sn_lower_case);
+   	LOG_INF("Thread EUI64: %s", eui64);
+   	knx_device_register(&actuator_device);
    }
    ```
 
    For `sensor`, use `KNX_CREDENTIALS_ROLE_LSSB` and register `sensor_device` instead. Stop registration on any error, especially `-ENOENT` for an unlisted DEVICEID; do not assign a default serial. The EUI64 is formatted directly from the same DEVICEID, so this log can be produced in `app_register_device()` before the Thread stack starts. If the radio OUI or EUI64 configuration changes, update the formatter and expected EUI64 comments.
 
 6. Rebuild and flash both applications. In nRF Connect Serial Terminal, open VCOM1 for each nRF54L15 DK at 115200 baud. After boot, confirm the log contains both `Assigned KNX serial number: ...` and `Thread EUI64: ...`. Match the J-Link serial printed on the DK with its `nRF DK XX` label beside that DEVICEID in `common/knx_credentials.c`; check that the generated KNX serial uses the label suffix and correct role digit, and that the logged EUI64 matches its table comment.
+If you are running the actuator sample, the KNX serial number should be on the format:
+00fa222229XX
+If you are running the sensor sample, the KNX serial number should be on the format:
+00fa222227XX
 
-## Tag sensor variant
+Either use the UART terminal in VS Code (as seen in image below), or use the serial terminal in nRF Connect for desktop, or another UART terminal of your choice.
+![open UART Terminal](images/Open_UART_log.png)
 
-The separate [Tag sensor application](sensor_tag/README.md) adapts the sensor to one button and an RGB LED, with RTT diagnostics. It uses the [custom board GPIO exercise](boards/others/knx_workshop_tag/README.md) or its [corrected board reference](solution/boards/others/knx_workshop_tag/README.md). Correct the starter GPIO assignments before flashing. The DK applications and Exercises 1-7 above are unchanged.
+### Commission the devices with ETS
 
-The Tag application keeps steady Thread and KNX LED indications close to the DK sample. An optional battery exercise is to turn off these steady indications and avoid unnecessary periodic UI wakeups, while retaining a brief button-press pulse.
+After you comment out the fixed Thread dataset and `CONFIG_KNX_HARDCODED_COMMISSIONING=y`, leave the default OpenThread Joiner settings enabled. The Joiner starts automatically with PSKd `N0RD1C`; the site's Thread Commissioner must authorize it for the device to join. No button press is needed to start joining. The device does not advertise a Thread identity as a QR code. After Thread attaches, the add-on publishes the KNX service, including the KNX serial number, for discovery.
+
+When the device is attached and its log reports `KNX service published`, it should be ready to add to the on-site KNX network. Use the KNX onboarding QR code labelled for that device. Match the device name in `common/ID.txt` (such as `nRF DK 00`) to the final two hexadecimal digits (`XX`) of its KNX serial. The actuator/LSAB serial is `00fa222229XX`; the sensor/LSSB serial is `00fa222227XX`. This is the KNX onboarding QR, not a Thread identity QR.
+
+If the site commissioning procedure requires KNX programming mode for discovery, press **Button 1** on the DK; the KNX status LED blinks while it is active. `CONFIG_KNX_PROGRAMMING_MODE_AUTOSTART=n`, so this mode does not start automatically.
+
+## Exercise 8: Run the sensor on the nRF54L15 Tag
+
+The [Tag sensor application](sensor_tag/README.md) adapts the sensor to one button and an RGB LED, with RTT diagnostics. In this exercise, use the Tag sensor instead of the DK sensor, and keep the actuator on the DK.
+
+1. Restore the local hardcoded KNX and Thread settings you commented out when completing Exercise 7. Re-enable them in `actuator/prj.conf` and `sensor/prj.conf` as needed for the local demo. Keep the actuator's Thread dataset values together so the devices use the same network.
+2. Correct the deliberately incorrect button and RGB LED GPIOs in the custom Tag board as described in [Correct the Board GPIOs](#correct-the-board-gpios) below. Check the assignments against the Tag schematic before flashing.
+3. The `sensor_tag/prj.conf` already enables hardcoded KNX commissioning and includes the default fixed Thread dataset. Change its Thread dataset values (`CONFIG_OPENTHREAD_PANID`, `CONFIG_OPENTHREAD_CHANNEL`, `CONFIG_OPENTHREAD_NETWORK_NAME`, `CONFIG_OPENTHREAD_XPANID`, and `CONFIG_OPENTHREAD_NETWORKKEY`) to exactly match the actuator project. Leave hardcoded commissioning enabled and do not re-enable the Joiner for this local demo.
+4. Follow [Create a Build Configuration](boards/others/knx_workshop_tag/README.md#create-a-build-configuration) to register the custom board root and build `sensor_tag` for `knx_workshop_tag/nrf54l15/cpuapp` with NCS v3.4.0. The board guide also explains [target naming](boards/others/knx_workshop_tag/README.md#board-target-naming) and [which stock files were copied or adapted, including the renames](boards/others/knx_workshop_tag/README.md#how-this-board-was-created). Use the participant board root after fixing its GPIOs.
+5. Rebuild the actuator and `sensor_tag`, then flash the actuator to a DK and `sensor_tag` to the Tag. Open the Tag's RTT terminal for logs. Wait for the Tag to attach to the local Thread network and report that the KNX service is published.
+6. Short-press the Tag button to toggle channel 0. Confirm the Tag's RGB status indication shows Thread/KNX state and the actuator's corresponding load LED changes.
+
+The Tag application keeps steady Thread and KNX LED indications close to the DK sample. As an optional battery exercise, turn off these steady indications and avoid unnecessary periodic UI wakeups while retaining brief button-press feedback.
+
+### Correct the Board GPIOs
+
+Open [boards/others/knx_workshop_tag/knx_workshop_tag_nrf54l15_cpuapp.dts](boards/others/knx_workshop_tag/knx_workshop_tag_nrf54l15_cpuapp.dts) in the workshop repository. Edit this custom board file, not the stock Tag board files under the SDK or the sensor-disabling application overlay.
+
+The button and LED nodes already exist inside the root `/ { ... };` block. Replace only their existing `gpios` properties with the following values; do not add duplicate nodes.
+
+| Existing node location | Tag pin | Replacement property |
+| --- | --- | --- |
+| `leds` > `led1_red: led1_red` | P2.08 | `gpios = <&gpio2 8 GPIO_ACTIVE_LOW>;` |
+| `leds` > `led1_green: led1_green` | P2.10 | `gpios = <&gpio2 10 GPIO_ACTIVE_LOW>;` |
+| `leds` > `led1_blue: led1_blue` | P2.09 | `gpios = <&gpio2 9 GPIO_ACTIVE_LOW>;` |
+| `buttons` > `button0: button0` | P0.00 | `gpios = <&gpio0 0 (GPIO_PULL_UP \| GPIO_ACTIVE_LOW)>;` |
+
+For example, the corrected button node inside `buttons` becomes:
+
+```dts
+button0: button0 {
+	gpios = <&gpio0 0 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+	label = "Push button 0";
+	zephyr,code = <INPUT_KEY_0>;
+};
+```
+
+All three LED channels are active-low: driving a pin low turns that color on. Keep the node labels, the `sw0 = &button0` and `led0 = &led1_blue` aliases, and the remaining board configuration unchanged. The GPIO controllers are already enabled, so no additional board Kconfig changes are needed.
+
+Compare your changes with the [corrected solution DTS](solution/boards/others/knx_workshop_tag/knx_workshop_tag_nrf54l15_cpuapp.dts). Then continue with the custom target `knx_workshop_tag/nrf54l15/cpuapp` and the participant repository as `BOARD_ROOT`, as described in step 4. Selecting the stock target `nrf54l15tag/nrf54l15/cpuapp` will not use your edited board file.

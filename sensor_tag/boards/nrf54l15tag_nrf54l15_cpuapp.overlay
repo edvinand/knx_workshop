@@ -1,0 +1,21 @@
+/* Disable unused Tag sensors and their buses in the light switch sample. */
+
+&bme688 {
+	status = "disabled";
+};
+
+&adxl367 {
+	status = "disabled";
+};
+
+&bmi270 {
+	status = "disabled";
+};
+
+&i2c21 {
+	status = "disabled";
+};
+
+&spi22 {
+	status = "disabled";
+};

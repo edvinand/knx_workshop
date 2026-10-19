@@ -45,8 +45,8 @@ The default leaves blue and green on during normal operation, and refreshes the 
 
 ## Commissioning and Logs
 
-The default configuration is the same Joiner/ETS workflow as the DK participant sensor. Diagnostics and the shell use RTT, not VCOM/UART. Open the nRF Connect RTT terminal for the selected Tag to inspect logs.
+The default configuration enables the local hardcoded KNX profile and a fixed Thread dataset. Its initial Thread values match `common/overlay-thread-hardcoded.conf`; change them to exactly match the actuator project's dataset before testing the pair. The hardcoded KNX preset binds channel 0, which is the channel operated by the Tag button. Diagnostics and the shell use RTT, not VCOM/UART. Open the nRF Connect RTT terminal for the selected Tag to inspect logs.
 
-For the local hardcoded-network exercise, append the same `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf` contents used by the DK sensor, with the actuator's matching network settings. As in the original hardcoded sample, only channel 0 is bound.
+For ETS commissioning instead, disable hardcoded KNX commissioning and the fixed Thread dataset, then restore the Joiner settings as described in Exercise 7. The DK and Tag versions use separate applications.
 
 Like the participant DK sensor before Exercise 7, this app initially uses the sample serial `00fa10020700`. It does not yet integrate the DEVICEID credential helper. Assign a unique serial before commissioning multiple sensors together; do not use the same serial for a DK sensor and Tag in one KNX installation. Link channel 0 in ETS for the physical button test.
