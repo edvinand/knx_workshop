@@ -317,3 +317,30 @@ For example, the corrected `buttons` section is placed inside the overlay's root
 All three LED channels are active-low: driving a pin low turns that color on. Keep the node labels, the `sw0 = &button0` and `led0 = &led1_blue` aliases, and the remaining board configuration unchanged. The GPIO controllers are already enabled, so no additional board Kconfig changes are needed.
 
 Compare your overlay with the [solution overlay](solution/sensor_tag/boards/knx_workshop_tag_nrf54l15_cpuapp.overlay) and the [corrected solution DTS](solution/boards/others/knx_workshop_tag/knx_workshop_tag_nrf54l15_cpuapp.dts), but leave the participant board DTS untouched. Continue with the custom target `knx_workshop_tag/nrf54l15/cpuapp` and the participant repository as `BOARD_ROOT`, as described in step 3. The automatically discovered filename is `knx_workshop_tag_nrf54l15_cpuapp.overlay`, matching the complete target with slashes replaced by underscores.
+
+
+## Future Considerations
+
+### Hardcoded Credentials
+
+Hardcoded Thread and KNX credentials simplify development by letting you test devices together without commissioning them into an actual KNX installation. Use this approach for the local workshop demo, not as a replacement for commissioning deployed devices.
+
+### Flashing Without Erasing
+
+After commissioning a device, you can normally update its application without commissioning it again. Thread credentials and KNX settings are kept in persistent storage separate from the application image. Use **Flash** rather than **Erase and Flash to Board**, preserve the storage partition layout, and keep the application's datapoint definitions compatible with the commissioned configuration.
+
+To deliberately clear the stored Thread and KNX settings, use **Erase and Flash to Board** or the `nrfutil device erase` command. Erasing the device also removes its application firmware.
+
+### Limitations of Hardcoded Commissioning
+
+The hardcoded demo currently shares an OSCORE sender identity between switches. If several switches control one actuator, the actuator cannot distinguish their replay-protection counters. Messages from a switch whose counter is behind may be rejected as replays until its counter catches up, making button presses appear unresponsive.
+
+Proper ETS commissioning assigns distinct device identities and security configuration, avoiding this shared-identity limitation. Improving the hardcoded demo remains a possible future enhancement.
+
+### Nordic KNX Add-on Roadmap
+
+The Nordic KNX IoT add-on is still under development. Work is ongoing toward v1.0.0, which is intended to be its first production-quality release.
+
+### Device Firmware Upgrade
+
+The add-on does not currently provide integrated Device Firmware Upgrade (DFU) support. Applications can add their own DFU solution, but this requires additional integration. We welcome feedback on which update methods you would prefer for KNX devices.
