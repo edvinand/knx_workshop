@@ -113,8 +113,13 @@ First, build both applications without flashing them to the DK. This will confir
 
 	![Adding a build configuration for the actuator application](images/add_build_configuration.png)
 
-2. Repeat for `sensor` with the same SDK, toolchain, board target, and default options. Click **Generate and Build** at the bottom.
-3. Confirm that both builds complete successfully.
+2. While building, you can open the Terminal window at the bottom of the VS Code window to monitor the build progress, and look for build errors.
+![build log terminal](images/build_log.png)
+
+3. Repeat for `sensor` with the same SDK, toolchain, board target, and default options. Click **Generate and Build** at the bottom.
+4. Confirm that both builds complete successfully.
+
+*Hint: Building the KNX and thread stack takes a while, so while the sensor is building, you can continue with Exercise 5, starting with the actuator.*
 
 ## Exercise 5: Set up your private Thread network
 
