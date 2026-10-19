@@ -10,11 +10,11 @@ Before starting the exercises, make sure you have:
 
 ## Exercise 1: Install the KNX IoT add-on
 
-This workshop uses nRF Connect SDK v3.4.0 and its toolchain, with the KNX IoT add-on pinned to commit `a4dd62ea9a9442912dfe6146b3747e562b91b3da`. Use this revision rather than the latest `main`; newer revisions may require a different SDK or application changes.
+This workshop uses nRF Connect SDK v3.4.0 and its toolchain, with the KNX IoT add-on pinned to commit `a4dd62ea9a9442912dfe6146b3747e562b91b3da`. If you follow the steps in this guide, we will check out that commit later. Use this revision rather than the latest `main`; newer revisions may require a different SDK or application changes.
 
 To add the add-on to an existing NCS workspace using the CLI:
 
-1. Open a terminal at the NCS workspace root, the directory containing `.west`.
+1. Open a terminal at the NCS workspace root, the directory containing `.west`. This is most likely the folder location ´C:/ncs/v3.4.0´.
 2. If the `ncs-knx-iot` directory is not already there, clone the add-on repository:
 
 	```powershell
@@ -54,7 +54,7 @@ To add the add-on to an existing NCS workspace using the CLI:
 
 ## Exercise 2: Include PR #6
 
-We found compatibility issues with some KNX routers in Zephyr, so we need to apply this patch: [PR #6](https://github.com/nrfconnect/sdk-knx-iot-point-api-stack/pull/6).
+We found some compatibility issues with some KNX routers in Zephyr, so we need to apply this patch: [PR #6](https://github.com/nrfconnect/sdk-knx-iot-point-api-stack/pull/6).
 
 From the NCS workspace root (folder called v3.4.0), check that the stack has no local changes:
 
@@ -78,6 +78,12 @@ git -C modules/lib/sdk-knx-iot-stack rev-parse HEAD
 The output must be `15eb57514e7eaf02d3de67e0f89d5cbe67c505bf`. A detached HEAD is expected. If you run `west update` again later, repeat Exercise 2 before rebuilding because west may replace this checkout with the stack revision specified by the manifest.
 
 ## Exercise 3: Add the applications to nRF Connect for VS Code
+First, you need to clone this repository. Exactly where you do it is not important, but many prefer to have their SDK clean, so we will do it in the folder right next to the SDK (v3.4.0), so that is probably inside your folder C:/ncs. From there, use this command:
+
+	```powershell
+	git clone https://github.com/edvinand/knx_workshop
+	```
+
 
 Add the applications to the nRF Connect view one at a time. Do not add the applications under `solution/`.
 
