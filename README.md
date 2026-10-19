@@ -95,9 +95,10 @@ This repository contains a few applications. One called "actuator", one called "
 ![Selecting the top-level actuator folder using Open an existing application](images/add_existing_app.png)
 
 This should leave you with the two applications listed in the side panel on the left hand side:
+
 ![Listed applications](images/application_view.png)
 
-These applications are actually very similar to the default KNX samples that you will find in v3.4.0\ncs-knx-iot\samples -> light_switch_actuator and light_switch_sensor. The actuator acts as a smart light bulb, or a smart light fixture, while the sensor acts as a light switch, but it could also be a motion sensor detecting someone entering a room.
+These applications are actually very similar to the default KNX samples that you will find in v3.4.0\ncs-knx-iot\samples -> light_switch_actuator and light_switch_sensor. The actuator acts as a smart light bulb, or a smart light fixture, while the sensor acts as a light switch, but it could also be a motion sensor detecting someone entering a room. Even though they are similar, we will use these ones, as I have some preassigned KNX serial numbers that we need to use for these workshops.
 
 ## Exercise 4: Build the actuator and sensor samples
 
