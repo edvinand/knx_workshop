@@ -10,7 +10,7 @@ Before starting the exercises, make sure you have:
 
 ## Exercise 1: Install the KNX IoT add-on
 
-The KNX IoT add-on requires nRF Connect SDK v3.4.0 and its toolchain. See the [software requirements](https://nrfconnectdocs.nordicsemi.com/addons/ncs-knx-iot/latest/setup.html#software-requirements) before starting.
+This workshop uses nRF Connect SDK v3.4.0 and its toolchain, with the KNX IoT add-on pinned to commit `a4dd62ea9a9442912dfe6146b3747e562b91b3da`. Use this revision rather than the latest `main`; newer revisions may require a different SDK or application changes.
 
 To add the add-on to an existing NCS workspace using the CLI:
 
@@ -21,18 +21,36 @@ To add the add-on to an existing NCS workspace using the CLI:
 	git clone https://github.com/nrfconnect/ncs-knx-iot
 	```
 
-3. Launch a terminal with the NCS v3.4.0 toolchain:
+3. Before switching revisions, check the add-on for local changes:
+
+	```powershell
+	git -C ncs-knx-iot status --short
+	```
+
+	If it prints any paths, stop and preserve those changes before continuing. If the output is empty, fetch and check out the workshop revision:
+
+	```powershell
+	git -C ncs-knx-iot fetch https://github.com/nrfconnect/ncs-knx-iot.git a4dd62ea9a9442912dfe6146b3747e562b91b3da
+	git -C ncs-knx-iot checkout --detach a4dd62ea9a9442912dfe6146b3747e562b91b3da
+	```
+
+	A detached HEAD is expected. This revision's manifest selects NCS v3.4.0. Do not pull or switch the add-on back to `main` during the workshop.
+
+4. Launch a terminal with the NCS v3.4.0 toolchain:
 
 	```powershell
 	nrfutil sdk-manager toolchain launch --ncs-version v3.4.0 --terminal
 	```
 
-	In the terminal that opens, run these commands:
+	In the terminal that opens, make sure you are still at the NCS workspace root, then run:
 
 	```powershell
 	west config manifest.path ncs-knx-iot
+	west config manifest.file west.yml
 	west update
 	```
+
+	Pin the add-on before running `west update`, so west reads the workshop manifest rather than the latest one. The manifest still tracks the KNX stack's `main` branch, so complete Exercise 2 before building.
 
 ## Exercise 2: Include PR #6
 
@@ -44,14 +62,20 @@ From the NCS workspace root (folder called v3.4.0), check that the stack has no 
 git -C modules/lib/sdk-knx-iot-stack status --short
 ```
 
-If it prints any paths, stop and preserve those changes before continuing. If the output is empty, fetch and check out the PR:
+If it prints any paths, stop and preserve those changes before continuing. If the output is empty, fetch and check out commit `15eb57514e7eaf02d3de67e0f89d5cbe67c505bf` from PR #6. Pinning the commit avoids following later changes to the PR:
 
 ```powershell
-git -C modules/lib/sdk-knx-iot-stack fetch https://github.com/nrfconnect/sdk-knx-iot-point-api-stack.git pull/6/head
-git -C modules/lib/sdk-knx-iot-stack checkout --detach FETCH_HEAD
+git -C modules/lib/sdk-knx-iot-stack fetch https://github.com/nrfconnect/sdk-knx-iot-point-api-stack.git 15eb57514e7eaf02d3de67e0f89d5cbe67c505bf
+git -C modules/lib/sdk-knx-iot-stack checkout --detach 15eb57514e7eaf02d3de67e0f89d5cbe67c505bf
 ```
 
-This checks out the PR in your local workspace. Running `west update` later may replace it with the revision specified by the manifest.
+Confirm the selected revision:
+
+```powershell
+git -C modules/lib/sdk-knx-iot-stack rev-parse HEAD
+```
+
+The output must be `15eb57514e7eaf02d3de67e0f89d5cbe67c505bf`. A detached HEAD is expected. If you run `west update` again later, repeat Exercise 2 before rebuilding because west may replace this checkout with the stack revision specified by the manifest.
 
 ## Exercise 3: Add the applications to nRF Connect for VS Code
 
@@ -196,3 +220,9 @@ That include path lets `knx_actuator.c` or `knx_sensor.c` use `#include "knx_cre
    Use `KNX_CREDENTIALS_ROLE_LSAB` with `actuator_device` and `KNX_CREDENTIALS_ROLE_LSSB` with `sensor_device`. Stop registration on any error, especially `-ENOENT` for an unlisted DEVICEID; do not assign a default serial. The EUI64 is formatted directly from the same DEVICEID, so this log can be produced in `app_register_device()` before the Thread stack starts. If the radio OUI or EUI64 configuration changes, update the formatter and expected EUI64 comments.
 
 6. Rebuild and flash both applications. In nRF Connect Serial Terminal, open VCOM1 for each nRF54L15 DK at 115200 baud. After boot, confirm the log contains both `Assigned KNX serial number: ...` and `Thread EUI64: ...`. Match the J-Link serial printed on the DK with its `nRF DK XX` label beside that DEVICEID in `common/knx_credentials.c`; check that the generated KNX serial uses the label suffix and correct role digit, and that the logged EUI64 matches its table comment.
+
+## Tag sensor variant
+
+The separate [Tag sensor application](sensor_tag/README.md) adapts the sensor to one button and an RGB LED, with RTT diagnostics. It uses the [custom board GPIO exercise](boards/others/knx_workshop_tag/README.md) or its [corrected board reference](solution/boards/others/knx_workshop_tag/README.md). Correct the starter GPIO assignments before flashing. The DK applications and Exercises 1-7 above are unchanged.
+
+The Tag application keeps steady Thread and KNX LED indications close to the DK sample. An optional battery exercise is to turn off these steady indications and avoid unnecessary periodic UI wakeups, while retaining a brief button-press pulse.
