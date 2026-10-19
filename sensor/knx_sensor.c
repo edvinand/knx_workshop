@@ -21,6 +21,7 @@
 #include <knx/knx_presets.h>
 #endif
 
+#include <zephyr/drivers/hwinfo.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/sys/atomic.h>
 #include <zephyr/sys/util.h>

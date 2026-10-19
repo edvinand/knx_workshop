@@ -7,6 +7,7 @@
 #include <openthread/dataset.h>
 #include <openthread/joiner.h>
 #include <openthread/thread.h>
+#include <zephyr/drivers/hwinfo.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/sys/atomic.h>
 #include <zephyr/sys/util.h>

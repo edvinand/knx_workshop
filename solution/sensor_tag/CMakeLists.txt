@@ -4,4 +4,9 @@ find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 project(light_switch_sensor_tag)
 
 target_include_directories(app PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../common)
-target_sources(app PRIVATE main.c knx_sensor.c tag_ui.c)
+target_sources(app PRIVATE 
+  main.c 
+  knx_sensor.c 
+  tag_ui.c
+  ../common/knx_credentials.c
+)

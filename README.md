@@ -127,9 +127,9 @@ The hardcoded overlay files contain the same starter Thread dataset for everyone
 
 1. In the top-level `actuator/prj.conf`, append the complete contents of `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf`. (Note that we will *not* use `overlay-thread-otshell.conf` for now)
 2. Now, change your network credentials that you copied:
-    - Set `CONFIG_OPENTHREAD_CHANNEL` to a channel from **11 through 26**, inclusive. Use the same channel in both applications.
-	- Change `CONFIG_OPENTHREAD_PANID` from the template value `7314` to a unique value from `0` through `65535`, inclusive. For this workshop, choose a four-digit value and use it in both applications.
-	- Replace `CONFIG_OPENTHREAD_NETWORKKEY` with a unique 16-byte key. Keep the template's colon-separated hexadecimal format and use exactly the same key in both applications. It is probably sufficient to change a couple of the bytes.
+    - Set `CONFIG_OPENTHREAD_CHANNEL` to a channel from **11 through 26**, inclusive.
+	- Change `CONFIG_OPENTHREAD_PANID` from the template value `7314` to a unique value from `0` through `65535`, inclusive. For this workshop, choose a four-digit value.
+	- Replace `CONFIG_OPENTHREAD_NETWORKKEY` with a unique 16-byte key. Keep the template's colon-separated hexadecimal format. It is probably sufficient to change a couple of the bytes.
 3. Repeat in the top-level `sensor/prj.conf`, using the exact same network configuration in `actuator/prj.conf` and `sensor/prj.conf`
 4. Rebuild both applications using their existing build configurations and confirm that both builds succeed before proceeding to any network test.
 
@@ -138,8 +138,8 @@ The hardcoded overlay files contain the same starter Thread dataset for everyone
 Use the top-level actuator as an example of how an application starts and hands off to the KNX IoT add-on:
 
 1. Start in `actuator/main.c`. Zephyr calls `main()`, which registers the actuator device profile with `app_register_device()` and then starts the application with `knx_app_start()`.
-2. Follow `app_register_device()` to `actuator/knx_actuator.c`. It registers `actuator_device` with `knx_device_register()`. That device definition holds the KNX identity (including the serial number), datapoints, functional blocks, and application callbacks. The optional hardcoded KNX preset is also defined here.
-3. `knx_app_start()` is provided by the KNX IoT add-on, not by `knx_actuator.c`. It initializes the shared KNX stack, applies the preset when hardcoded commissioning is enabled, sets up the board handlers, calls the actuator's initialization callback, and starts the KNX worker thread. Thread behavior is selected by the application configuration; it is not initialized in `knx_actuator.c`.
+2. Follow `app_register_device()` to `actuator/knx_actuator.c` (you can right click the app_register_device() call, and click "go to definition"). It registers `actuator_device` with `knx_device_register()`. That device definition holds the KNX identity (including the serial number), datapoints, functional blocks, and application callbacks. The optional hardcoded KNX preset is also defined here.
+3. `knx_app_start()`, which is called from main(), is provided by the KNX IoT add-on, not by `knx_actuator.c`. It initializes the shared KNX stack, applies the preset when hardcoded commissioning is enabled, sets up the board handlers, calls the actuator's initialization callback, and starts the KNX worker thread. Thread behavior is selected by the application configuration; it is not initialized in `knx_actuator.c`.
 
 After Thread attaches to a network, the KNX worker publishes the KNX service. When a KNX write changes the actuator's switch datapoint, its `actuator_on_write()` callback updates the corresponding LED.
 
@@ -168,7 +168,7 @@ If you paired up and have one actuator and one sensor using the same network cre
 
 ![nRF54L15 DK](images/nRF54L15DK.png)
 
-Congratulations! You are running your first light switch and light bulb applications on the nRF54L15 DK.
+Congratulations! You are running your very first KNX light switch and light bulb applications on the nRF54L15 DK.
 
 ## Exercise 7: Add your device to an actual KNX network
 
@@ -195,43 +195,41 @@ That include path lets `knx_actuator.c` or `knx_sensor.c` use `#include "knx_cre
 
 #### Apply the mapping to the participant applications
 
-1. In both top-level `actuator/prj.conf` and `sensor/prj.conf`, add `CONFIG_HWINFO=y` so the app can read its hardware DEVICEID.
-2. When switching from the local hardcoded network to ETS, comment out—not delete—the hardcoded lines copied in Exercise 5. Comment out `CONFIG_KNX_HARDCODED_COMMISSIONING=y` and the fixed Thread settings (`CONFIG_OPENTHREAD_JOINER=n`, `CONFIG_OPENTHREAD_MANUAL_START=n`, `CONFIG_OPENTHREAD_PANID`, `CONFIG_OPENTHREAD_CHANNEL`, `CONFIG_OPENTHREAD_NETWORK_NAME`, `CONFIG_OPENTHREAD_XPANID`, and `CONFIG_OPENTHREAD_NETWORKKEY`). Keep the original Joiner settings enabled.
-3. In each app's `knx_actuator.c` or `knx_sensor.c`, add:
+1. When switching from the local hardcoded network to ETS, comment out—not delete—the hardcoded lines copied in Exercise 5. Comment out `CONFIG_KNX_HARDCODED_COMMISSIONING=y` and the fixed Thread settings (`CONFIG_OPENTHREAD_JOINER=n`, `CONFIG_OPENTHREAD_MANUAL_START=n`, `CONFIG_OPENTHREAD_PANID`, `CONFIG_OPENTHREAD_CHANNEL`, `CONFIG_OPENTHREAD_NETWORK_NAME`, `CONFIG_OPENTHREAD_XPANID`, and `CONFIG_OPENTHREAD_NETWORKKEY`). Keep the original Joiner settings enabled.
+2. In each app's `knx_actuator.c` or `knx_sensor.c`, add:
 
    ```c
-   #include <zephyr/drivers/hwinfo.h>
    #include "knx_credentials.h"
    ```
 
-4. In each app's `CMakeLists.txt`, add `../common/knx_credentials.c` to its existing `target_sources(app PRIVATE ...)` list.
-5. Replace the fixed `sn_lower_case` string with a writable `KNX_CREDENTIALS_SERIAL_BUFFER_SIZE` buffer. In `app_register_device()`, before calling `knx_device_register()`, read the hardware ID and use the role-specific helper:
+3. In each app's `CMakeLists.txt`, add `../common/knx_credentials.c` to its existing `target_sources(app PRIVATE ...)` list.
+4. Replace the fixed `sn_lower_case` string with a writable `KNX_CREDENTIALS_SERIAL_BUFFER_SIZE` buffer. Inside `app_register_device()`, before calling `knx_device_register()`, read the hardware ID and use the role-specific helper:
 
    ```c
-   uint8_t device_id[KNX_CREDENTIALS_DEVICE_ID_SIZE];
-   ssize_t id_length = hwinfo_get_device_id(device_id, sizeof(device_id));
-   if (id_length != (ssize_t)sizeof(device_id)) {
-	   LOG_ERR("Failed to read device ID: %d", (int)id_length);
-	   return;
-   }
+    uint8_t device_id[KNX_CREDENTIALS_DEVICE_ID_SIZE];
+    ssize_t id_length = hwinfo_get_device_id(device_id, sizeof(device_id));
+    if (id_length != (ssize_t)sizeof(device_id)) {
+        LOG_ERR("Failed to read device ID: %d", (int)id_length);
+        return;
+    }
 
-   int err = knx_credentials_get_serial_number(
-	   device_id, KNX_CREDENTIALS_ROLE_LSAB, sn_lower_case, sizeof(sn_lower_case));
-   if (err < 0) {
-	   LOG_ERR("Failed to assign KNX serial number: %d", err);
-	   return;
-   }
+    int err = knx_credentials_get_serial_number(
+        device_id, KNX_CREDENTIALS_ROLE_LSAB, sn_lower_case, sizeof(sn_lower_case));
+    if (err < 0) {
+        LOG_ERR("Failed to assign KNX serial number: %d", err);
+        return;
+    }
 
-   char eui64[KNX_CREDENTIALS_EUI64_BUFFER_SIZE];
-   err = knx_credentials_get_thread_eui64(device_id, eui64, sizeof(eui64));
-   if (err < 0) {
-	   LOG_ERR("Failed to format Thread EUI64: %d", err);
-	   return;
-   }
+    char eui64[KNX_CREDENTIALS_EUI64_BUFFER_SIZE];
+    err = knx_credentials_get_thread_eui64(device_id, eui64, sizeof(eui64));
+    if (err < 0) {
+        LOG_ERR("Failed to format Thread EUI64: %d", err);
+        return;
+    }
 
-   LOG_INF("Assigned KNX serial number: %s", sn_lower_case);
-   LOG_INF("Thread EUI64: %s", eui64);
-   knx_device_register(&actuator_device);
+    LOG_INF("Assigned KNX serial number: %s", sn_lower_case);
+    LOG_INF("Thread EUI64: %s", eui64);
+    knx_device_register(&actuator_device);
    ```
 
    Use `KNX_CREDENTIALS_ROLE_LSAB` with `actuator_device` and `KNX_CREDENTIALS_ROLE_LSSB` with `sensor_device`. Stop registration on any error, especially `-ENOENT` for an unlisted DEVICEID; do not assign a default serial. The EUI64 is formatted directly from the same DEVICEID, so this log can be produced in `app_register_device()` before the Thread stack starts. If the radio OUI or EUI64 configuration changes, update the formatter and expected EUI64 comments.
