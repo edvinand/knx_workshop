@@ -10,6 +10,8 @@ The devicetree keeps one button and three RGB LED channels. The button uses the 
 
 Locate the `gpios` properties under `buttons` and `leds` in the board DTS. Use the Tag schematic to correct them, either directly in the board DTS or through an application overlay. An overlay should target the existing node labels rather than add duplicate buttons or LEDs. A corrected reference is available under `solution/boards/others/knx_workshop_tag`.
 
+For [Exercise 8](../../../README.md#correct-the-board-gpios), leave this DTS unchanged and copy its LED/button sections into the application's overlay, preserving their node paths and labels. Correct the GPIOs in that overlay instead. Select the exercise's shorter filename explicitly by adding `-DEXTRA_DTC_OVERLAY_FILE=boards/knx_workshop_nrf54l15_cpuapp.overlay` alongside the board-root argument when creating the build configuration below.
+
 The BME688, ADXL367, BMI270, and their unused I2C/SPI buses are explicitly disabled. This prevents normal driver initialization; it does not guarantee that the physical sensors are powered off. The Tag's clock, radio, antenna-switch, and memory configuration is retained. No UART console is configured.
 
 ## Board Files

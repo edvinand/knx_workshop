@@ -258,20 +258,20 @@ If the site commissioning procedure requires KNX programming mode for discovery,
 
 The [Tag sensor application](sensor_tag/README.md) adapts the sensor to one button and an RGB LED, with RTT diagnostics. In this exercise, use the Tag sensor instead of the DK sensor, and keep the actuator on the DK.
 
-1. Restore the local hardcoded KNX and Thread settings you commented out when completing Exercise 7. Re-enable them in `actuator/prj.conf` and `sensor/prj.conf` as needed for the local demo. Keep the actuator's Thread dataset values together so the devices use the same network.
-2. Correct the deliberately incorrect button and RGB LED GPIOs in the custom Tag board as described in [Correct the Board GPIOs](#correct-the-board-gpios) below. Check the assignments against the Tag schematic before flashing.
-3. The `sensor_tag/prj.conf` already enables hardcoded KNX commissioning and includes the default fixed Thread dataset. Change its Thread dataset values (`CONFIG_OPENTHREAD_PANID`, `CONFIG_OPENTHREAD_CHANNEL`, `CONFIG_OPENTHREAD_NETWORK_NAME`, `CONFIG_OPENTHREAD_XPANID`, and `CONFIG_OPENTHREAD_NETWORKKEY`) to exactly match the actuator project. Leave hardcoded commissioning enabled and do not re-enable the Joiner for this local demo.
-4. Follow [Create a Build Configuration](boards/others/knx_workshop_tag/README.md#create-a-build-configuration) to register the custom board root and build `sensor_tag` for `knx_workshop_tag/nrf54l15/cpuapp` with NCS v3.4.0. The board guide also explains [target naming](boards/others/knx_workshop_tag/README.md#board-target-naming) and [which stock files were copied or adapted, including the renames](boards/others/knx_workshop_tag/README.md#how-this-board-was-created). Use the participant board root after fixing its GPIOs.
-5. Rebuild the actuator and `sensor_tag`, then flash the actuator to a DK and `sensor_tag` to the Tag. Open the Tag's RTT terminal for logs. Wait for the Tag to attach to the local Thread network and report that the KNX service is published.
+1. Restore the local hardcoded KNX and Thread settings you commented out when completing Exercise 7. Re-enable them in `actuator/prj.conf` and `sensor/prj.conf` as needed for the local demo. Now add the sensor_tag sample application to your workspace. Make sure that it contains the same thread credentials as your actuator application.
+2. The custom board files are adapted from the Tag's official board definition, but their button and RGB LED GPIOs are deliberately incorrect. Normally, when maintaining your own board, you would correct the pins and polarity directly in its DTS. For this exercise, practise using an application-specific devicetree overlay instead: create `sensor_tag/boards/knx_workshop_nrf54l15_cpuapp.overlay`. Copy the complete `leds`, `rgb_led_1` and `buttons` sections from [boards/others/knx_workshop_tag/knx_workshop_tag_nrf54l15_cpuapp.dts](boards/others/knx_workshop_tag/knx_workshop_tag_nrf54l15_cpuapp.dts) into a root `/ { ... };` block in the overlay, then correct the GPIOs there using [Correct the Board GPIOs](#correct-the-board-gpios) below. Keep the custom board files unchanged. This lets one application adapt the board's hardware configuration without changing it for other applications. Check your assignments against the Tag schematic before flashing.
+3. Follow [Create a Build Configuration](boards/others/knx_workshop_tag/README.md#create-a-build-configuration) to register the custom board root and build `sensor_tag` for `knx_workshop_tag/nrf54l15/cpuapp` with NCS v3.4.0. In **Extra CMake arguments**, also add `-DEXTRA_DTC_OVERLAY_FILE=boards/knx_workshop_nrf54l15_cpuapp.overlay`. This filename does not match the full custom board name, so it must be selected explicitly. Confirm the configuration log lists your overlay. The board guide also explains [target naming](boards/others/knx_workshop_tag/README.md#board-target-naming) and [which stock files were copied or adapted, including the renames](boards/others/knx_workshop_tag/README.md#how-this-board-was-created).
+4. Rebuild the actuator and `sensor_tag`. With no Tag connected to the DK's DEBUG OUT port, flash the actuator to the DK as in Exercise 6. The next step programs the Tag separately.
+5. Insert a CR2032 coin cell into the Tag's battery holder, observing the marked polarity. Connect the Tag's P1 debug header to the nRF54L15 DK's **DEBUG OUT** port. The connector is keyed for one orientation: align the key and pins, and do not force it. Connect the DK to USB and turn it on. DEBUG OUT does not power the Tag by default, so keep its battery inserted; **do not connect an external power supply or a VDDIO-to-VDD SWD0 power jumper while the battery is fitted**. In nRF Connect, select the `sensor_tag` build configuration and click **Flash**, choosing the connected DK's debugger if prompted. The DK automatically routes programming to the attached Tag, not its own application SoC. Open the Tag's RTT terminal and wait for Thread attachment and `KNX service published`. You can then detach the Tag and leave it running on its battery, but RTT requires the debug connection.
 6. Short-press the Tag button to toggle channel 0. Confirm the Tag's RGB status indication shows Thread/KNX state and the actuator's corresponding load LED changes.
 
 The Tag application keeps steady Thread and KNX LED indications close to the DK sample. As an optional battery exercise, turn off these steady indications and avoid unnecessary periodic UI wakeups while retaining brief button-press feedback.
 
 ### Correct the Board GPIOs
 
-Open [boards/others/knx_workshop_tag/knx_workshop_tag_nrf54l15_cpuapp.dts](boards/others/knx_workshop_tag/knx_workshop_tag_nrf54l15_cpuapp.dts) in the workshop repository. Edit this custom board file, not the stock Tag board files under the SDK or the sensor-disabling application overlay.
+Create the overlay from step 2 in the `sensor_tag` application's `boards` folder, not in the repository's board-definition directory. Keep both the custom board DTS and the stock SDK files unchanged. The existing stock-Tag sensor-disabling overlay is a separate file and is not used for this custom board target.
 
-The button and LED nodes already exist inside the root `/ { ... };` block. Replace only their existing `gpios` properties with the following values; do not add duplicate nodes.
+Copy the board DTS's complete `leds`, `rgb_led_1: rgb_led_1` and `buttons` sections inside a single `/ { ... };` block in your new overlay. Keep their existing names and labels: devicetree merges these sections with the same node paths in the board definition rather than creating a second set of LEDs or buttons. Do not copy `/dts-v1/;` or the SoC/partition includes into the overlay. Change the copied `gpios` properties to:
 
 | Existing node location | Tag pin | Replacement property |
 | --- | --- | --- |
@@ -280,16 +280,22 @@ The button and LED nodes already exist inside the root `/ { ... };` block. Repla
 | `leds` > `led1_blue: led1_blue` | P2.09 | `gpios = <&gpio2 9 GPIO_ACTIVE_LOW>;` |
 | `buttons` > `button0: button0` | P0.00 | `gpios = <&gpio0 0 (GPIO_PULL_UP \| GPIO_ACTIVE_LOW)>;` |
 
-For example, the corrected button node inside `buttons` becomes:
+For example, the corrected `buttons` section is placed inside the overlay's root block as follows. Keep your copied `leds` and `rgb_led_1` sections alongside `buttons` inside that same block.
 
 ```dts
-button0: button0 {
-	gpios = <&gpio0 0 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-	label = "Push button 0";
-	zephyr,code = <INPUT_KEY_0>;
+/ {
+	buttons {
+		compatible = "gpio-keys";
+
+		button0: button0 {
+			gpios = <&gpio0 0 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Push button 0";
+			zephyr,code = <INPUT_KEY_0>;
+		};
+	};
 };
 ```
 
 All three LED channels are active-low: driving a pin low turns that color on. Keep the node labels, the `sw0 = &button0` and `led0 = &led1_blue` aliases, and the remaining board configuration unchanged. The GPIO controllers are already enabled, so no additional board Kconfig changes are needed.
 
-Compare your changes with the [corrected solution DTS](solution/boards/others/knx_workshop_tag/knx_workshop_tag_nrf54l15_cpuapp.dts). Then continue with the custom target `knx_workshop_tag/nrf54l15/cpuapp` and the participant repository as `BOARD_ROOT`, as described in step 4. Selecting the stock target `nrf54l15tag/nrf54l15/cpuapp` will not use your edited board file.
+Compare your overlay's GPIO values with the [corrected solution DTS](solution/boards/others/knx_workshop_tag/knx_workshop_tag_nrf54l15_cpuapp.dts), but leave the participant board DTS untouched. Continue with the custom target `knx_workshop_tag/nrf54l15/cpuapp`, the participant repository as `BOARD_ROOT`, and the explicit overlay argument from step 3. The usual automatically discovered filename for this target would be `knx_workshop_tag_nrf54l15_cpuapp.overlay`; the shorter filename used in this exercise needs `EXTRA_DTC_OVERLAY_FILE`.
