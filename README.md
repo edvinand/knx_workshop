@@ -265,12 +265,15 @@ The [Tag sensor application](sensor_tag/README.md) adapts the sensor to one butt
    ```dts
    / {
 	   leds {
+        ...
 	   };
 
 	   rgb_led_1: rgb_led_1 {
+        ...
 	   };
 
 	   buttons {
+        ...
 	   };
    };
    ```
