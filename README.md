@@ -94,6 +94,9 @@ This repository contains a few applications. One called "actuator", one called "
 
 ![Selecting the top-level actuator folder using Open an existing application](images/add_existing_app.png)
 
+This should leave you with the two applications listed in the side panel on the left hand side:
+![Listed applications](images/application_view.png)
+
 ## Exercise 4: Build the actuator and sensor samples
 
 First, build both applications without flashing or starting them. This confirms the initial configurations build before you set up a private Thread network in Exercise 5.
