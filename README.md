@@ -80,9 +80,9 @@ The output must be `15eb57514e7eaf02d3de67e0f89d5cbe67c505bf`. A detached HEAD i
 ## Exercise 3: Add the applications to nRF Connect for VS Code
 First, you need to clone this repository. Exactly where you do it is not important, but many prefer to have their SDK clean, so we will do it in the folder right next to the SDK (v3.4.0), so that is probably inside your folder C:/ncs. From there, use this command:
 
-	```powershell
-	git clone https://github.com/edvinand/knx_workshop
-	```
+```powershell
+git clone https://github.com/edvinand/knx_workshop
+```
 
 
 Add the applications to the nRF Connect view one at a time. Do not add the applications under `solution/`.
