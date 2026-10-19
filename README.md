@@ -85,7 +85,7 @@ git clone https://github.com/edvinand/knx_workshop
 ```
 
 
-Add the applications to the nRF Connect view one at a time. Do not add the applications under `solution/`.
+This repository contains a few applications. One called "actuator", one called "sensor" and one called "sensor_tag". Let us add the two first applications to the nRF Connect view one at a time. Do not add the applications under `solution/`. This folder is intended as something you can look at if you are not able to finish the workshop within the assigned time. 
 
 1. In the nRF Connect Welcome view, select **Open an existing application**.
 2. Browse to the workshop repository, select its top-level `actuator` folder, and click **Open**.
