@@ -203,36 +203,39 @@ That include path lets `knx_actuator.c` or `knx_sensor.c` use `#include "knx_cre
    ```
 
 3. In each app's `CMakeLists.txt`, add `../common/knx_credentials.c` to its existing `target_sources(app PRIVATE ...)` list.
-4. Replace the fixed `sn_lower_case` string with a writable `KNX_CREDENTIALS_SERIAL_BUFFER_SIZE` buffer. Inside `app_register_device()`, before calling `knx_device_register()`, read the hardware ID and use the role-specific helper:
+4. Replace the fixed `sn_lower_case` string with a writable `KNX_CREDENTIALS_SERIAL_BUFFER_SIZE` buffer. Replace the entire existing `app_register_device()` function with this version. Replacing the whole function also removes its original `knx_device_register()` call, so registration is not duplicated:
 
    ```c
-	uint8_t device_id[KNX_CREDENTIALS_DEVICE_ID_SIZE];
-	ssize_t id_length = hwinfo_get_device_id(device_id, sizeof(device_id));
-	if (id_length != (ssize_t)sizeof(device_id)) {
-		LOG_ERR("Failed to read device ID: %d", (int)id_length);
-		return;
-	}
+   void app_register_device(void)
+   {
+	   uint8_t device_id[KNX_CREDENTIALS_DEVICE_ID_SIZE];
+	   ssize_t id_length = hwinfo_get_device_id(device_id, sizeof(device_id));
+	   if (id_length != (ssize_t)sizeof(device_id)) {
+		   LOG_ERR("Failed to read device ID: %d", (int)id_length);
+		   return;
+	   }
 
-	int err = knx_credentials_get_serial_number(
-		device_id, KNX_CREDENTIALS_ROLE_LSAB, sn_lower_case, sizeof(sn_lower_case));
-	if (err < 0) {
-		LOG_ERR("Failed to assign KNX serial number: %d", err);
-		return;
-	}
+	   int err = knx_credentials_get_serial_number(
+		   device_id, KNX_CREDENTIALS_ROLE_LSAB, sn_lower_case, sizeof(sn_lower_case));
+	   if (err < 0) {
+		   LOG_ERR("Failed to assign KNX serial number: %d", err);
+		   return;
+	   }
 
-	char eui64[KNX_CREDENTIALS_EUI64_BUFFER_SIZE];
-	err = knx_credentials_get_thread_eui64(device_id, eui64, sizeof(eui64));
-	if (err < 0) {
-		LOG_ERR("Failed to format Thread EUI64: %d", err);
-		return;
-	}
+	   char eui64[KNX_CREDENTIALS_EUI64_BUFFER_SIZE];
+	   err = knx_credentials_get_thread_eui64(device_id, eui64, sizeof(eui64));
+	   if (err < 0) {
+		   LOG_ERR("Failed to format Thread EUI64: %d", err);
+		   return;
+	   }
 
-	LOG_INF("Assigned KNX serial number: %s", sn_lower_case);
-	LOG_INF("Thread EUI64: %s", eui64);
-	knx_device_register(&actuator_device);
+	   LOG_INF("Assigned KNX serial number: %s", sn_lower_case);
+	   LOG_INF("Thread EUI64: %s", eui64);
+	   knx_device_register(&actuator_device);
+   }
    ```
 
-   Use `KNX_CREDENTIALS_ROLE_LSAB` with `actuator_device` and `KNX_CREDENTIALS_ROLE_LSSB` with `sensor_device`. Stop registration on any error, especially `-ENOENT` for an unlisted DEVICEID; do not assign a default serial. The EUI64 is formatted directly from the same DEVICEID, so this log can be produced in `app_register_device()` before the Thread stack starts. If the radio OUI or EUI64 configuration changes, update the formatter and expected EUI64 comments.
+   For `sensor`, use `KNX_CREDENTIALS_ROLE_LSSB` and register `sensor_device` instead. Stop registration on any error, especially `-ENOENT` for an unlisted DEVICEID; do not assign a default serial. The EUI64 is formatted directly from the same DEVICEID, so this log can be produced in `app_register_device()` before the Thread stack starts. If the radio OUI or EUI64 configuration changes, update the formatter and expected EUI64 comments.
 
 6. Rebuild and flash both applications. In nRF Connect Serial Terminal, open VCOM1 for each nRF54L15 DK at 115200 baud. After boot, confirm the log contains both `Assigned KNX serial number: ...` and `Thread EUI64: ...`. Match the J-Link serial printed on the DK with its `nRF DK XX` label beside that DEVICEID in `common/knx_credentials.c`; check that the generated KNX serial uses the label suffix and correct role digit, and that the logged EUI64 matches its table comment.
 
