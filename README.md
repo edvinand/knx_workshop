@@ -323,7 +323,7 @@ Compare your overlay with the [solution overlay](solution/sensor_tag/boards/knx_
 
 ### Hardcoded Credentials
 
-Hardcoded Thread and KNX credentials simplify development by letting you test devices together without commissioning them into an actual KNX installation. Use this approach for the local workshop demo, not as a replacement for commissioning deployed devices.
+Hardcoded Thread and KNX credentials simplify development by letting you test devices together without commissioning them into an actual KNX installation. Use this approach for the local development, not as a replacement for commissioning deployed devices.
 
 ### Flashing Without Erasing
 
