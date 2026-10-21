@@ -6,6 +6,10 @@ See the [KNX IoT add-on documentation](https://nrfconnectdocs.nordicsemi.com/add
 
 > **Note:** This link points to the latest documentation. The workshop uses a pinned add-on revision, so some features, instructions, or configuration options may differ from the version used here.
 
+## Useful tools
+
+See [Useful tools](useful-tools.md) for short descriptions and links to tools for development, device programming, and power measurement.
+
 ## Prerequisites
 
 Before starting the exercises, make sure you have:
