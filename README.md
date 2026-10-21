@@ -254,8 +254,13 @@ When the device is attached and its log reports `KNX service published`, it shou
 
 If the site commissioning procedure requires KNX programming mode for discovery, press **Button 1** on the DK; the KNX status LED blinks while it is active. `CONFIG_KNX_PROGRAMMING_MODE_AUTOSTART=n`, so this mode does not start automatically.
 
-You will find a file in common/QRcodes.txt listing all the device's QR codes needed for onboarding the device into KNX. Find the one matching your devices Serial number (printed on the white sticker on the DK). Use the QR code matching the application you are using. E.g. for my device, which has the serial number 1057743303, my actuator QR code is:
-´KNX:S:00FA22222900;P:2X4W3TE0DFLLS19Y1FCH´
+The [QRcodes.txt](common/QRcodes.txt) file lists the QR code strings used for device onboarding. Find your DK by its **J-Link serial number**, printed on the white sticker on the board, then choose the **Actuator** or **Sensor** KNX certificate to match the application you flashed. The J-Link serial number is different from the KNX serial number in the certificate.
+
+For example, the DK with J-Link serial number **1057743303** uses this KNX certificate when running the actuator application:
+
+```text
+KNX:S:00FA22222900;P:2X4W3TE0DFLLS19Y1FCH
+```
 
 ## Exercise 8: Run the sensor on the nRF54L15 Tag
 
