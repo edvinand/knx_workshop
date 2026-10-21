@@ -1,5 +1,11 @@
 # knx-hands-on
 
+## Documentation
+
+See the [KNX IoT add-on documentation](https://nrfconnectdocs.nordicsemi.com/addons/ncs-knx-iot/latest/index.html) for additional reference.
+
+> **Note:** This link points to the latest documentation. The workshop uses a pinned add-on revision, so some features, instructions, or configuration options may differ from the version used here.
+
 ## Prerequisites
 
 Before starting the exercises, make sure you have:
