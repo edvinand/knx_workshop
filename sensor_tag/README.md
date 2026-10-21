@@ -43,6 +43,14 @@ This keeps status indications close to the DK sample. LED channels and button de
 
 The default leaves blue and green on during normal operation, and refreshes the UI every 100 ms. This is a workshop configuration, not an optimized battery product. An optional follow-up exercise is to turn off steady status LEDs and remove unnecessary periodic wakeups, retaining brief button feedback.
 
+## Optional release configuration
+
+Apply [prj_release.conf](prj_release.conf) as an extra Kconfig fragment on top of [prj.conf](prj.conf). In nRF Connect for VS Code, add it under **Extra Kconfig fragments**, or add `-DEXTRA_CONF_FILE=prj_release.conf` to the build's extra CMake arguments. Use a separate build directory or perform a pristine rebuild when changing configurations.
+
+This profile is copied from the DK sensor's [release.conf](../sensor/release.conf). It disables logging, the shell, RTT, and console output, enables RAM power-down and device power management, disables unused SPI support, and enables link-time optimization. It does not change Thread credentials, the 500 ms poll period, LED behavior, or the periodic UI refresh, so it is a starting point rather than a fully power-optimized application.
+
+Use it as an **extra** fragment, not as a replacement for `prj.conf`; the filename alone does not enable it in a normal build. To restore diagnostics, remove the extra fragment and rebuild. With this profile enabled, the RTT shell is unavailable, including its Thread factory-reset command.
+
 ## Commissioning and Logs
 
 The default configuration enables the local hardcoded KNX profile and a fixed Thread dataset. Its initial Thread values match `common/overlay-thread-hardcoded.conf`; change them to exactly match the actuator project's dataset before testing the pair. The hardcoded KNX preset binds channel 0, which is the channel operated by the Tag button. Diagnostics and the shell use RTT, not VCOM/UART. Open the nRF Connect RTT terminal for the selected Tag to inspect logs.
