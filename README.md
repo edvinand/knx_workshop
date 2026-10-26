@@ -1,5 +1,12 @@
 # knx-hands-on
 
+> **Note:** The exercises in this workshop still work as written. For new development, however, we recommend the [`v0.7.0` tag of the KNX IoT add-on](https://github.com/nrfconnect/ncs-knx-iot/tree/v0.7.0) together with nRF Connect SDK v3.4.1. See [Setting up the environment](https://nrfconnectdocs.nordicsemi.com/addons/ncs-knx-iot/latest/setup.html) in the add-on documentation for installation instructions.
+>
+> If you use `v0.7.0`:
+>
+> - [Exercise 1](#exercise-1-install-the-knx-iot-add-on) and [Exercise 2](#exercise-2-include-pr-6) are obsolete. The add-on manifest pins nRF Connect SDK v3.4.1 and a KNX IoT stack revision that already includes the fix from Exercise 2.
+> - The remaining exercises are still valid. Base your applications on the add-on samples, [`light_switch_actuator`](https://github.com/nrfconnect/ncs-knx-iot/tree/v0.7.0/samples/light_switch_actuator) and [`light_switch_sensor`](https://github.com/nrfconnect/ncs-knx-iot/tree/v0.7.0/samples/light_switch_sensor), instead of the `actuator` and `sensor` applications in this repository.
+
 ## Documentation
 
 See the [KNX IoT add-on documentation](https://nrfconnectdocs.nordicsemi.com/addons/ncs-knx-iot/latest/index.html) for additional reference.
@@ -133,13 +140,16 @@ First, build both applications without flashing them to the DK. This will confir
 
 ## Exercise 5: Set up your private Thread network
 
-The hardcoded overlay files contain the same starter Thread dataset for everyone. If you leave it unchanged, multiple groups can end up using the same network settings. Choose a channel in the valid range and set a unique PAN ID and network key for your group. The actuator and sensor in your pair must use the same channel, PAN ID, and key. The network key is what prevents other groups from joining your network; a different channel or PAN ID alone does not provide privacy.
+The hardcoded overlay files contain the same starter Thread dataset for everyone. If you leave it unchanged, multiple groups can end up using the same network settings. Choose a channel in the valid range and set a unique PAN ID, extended PAN ID, and network key for your group. The actuator and sensor in your pair must use the same channel, PAN ID, extended PAN ID, and key. The network key is what prevents other groups from joining your network; a different channel or PAN ID alone does not provide privacy.
 
-1. In the top-level `actuator/prj.conf`, append the complete contents of `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf`. (Note that we will *not* use `overlay-thread-otshell.conf` for now)
+1. In the top-level `actuator/prj.conf`, append the complete contents of `common/overlay-knx-hardcoded.conf` and `common/overlay-thread-hardcoded.conf`. (Note that we will *not* use `overlay-thread-otshell.conf` for now). Keep the `CONFIG_OPENTHREAD_JOINER=n` and `CONFIG_OPENTHREAD_MANUAL_START=n` lines from the overlay; they override the Joiner settings earlier in `prj.conf`. Without them, the device waits for a Thread Commissioner instead of using your fixed network.
 2. Now, change your network credentials that you copied:
     - Set `CONFIG_OPENTHREAD_CHANNEL` to a channel from **11 through 26**, inclusive.
-	- Change `CONFIG_OPENTHREAD_PANID` from the template value `7314` to a unique value from `0` through `65535`, inclusive. For this workshop, choose a four-digit value.
-	- Replace `CONFIG_OPENTHREAD_NETWORKKEY` with a unique 16-byte key. Keep the template's colon-separated hexadecimal format. It is probably sufficient to change a couple of the bytes.
+	- Change `CONFIG_OPENTHREAD_PANID` from the template value `7314` to a unique value from `0` through `65534`, inclusive. Do not use `65535` (`0xFFFF`); it is the broadcast PAN ID. For this workshop, choose a four-digit value.
+	- Change `CONFIG_OPENTHREAD_XPANID` to a unique 8-byte value. It must be exactly 8 colon-separated pairs of two hexadecimal digits, for example `"ca:fe:00:de:ad:00:be:01"`. Changing the last byte is sufficient.
+	- Replace `CONFIG_OPENTHREAD_NETWORKKEY` with a unique 16-byte key. It must be exactly 16 colon-separated pairs of two hexadecimal digits (`0`–`9`, `a`–`f`), in the same format as the template. It is probably sufficient to change a couple of the bytes.
+
+	> **Note:** These values are not validated when you build. A missing byte, an extra digit in a pair, or a non-hexadecimal character can result in different credentials on each device, or prevent the network from starting. If the network does not start, look for `Failed to parse extended PAN ID` or `Failed to parse network key` in the log.
 3. Repeat in the top-level `sensor/prj.conf`, using the exact same network configuration in `actuator/prj.conf` and `sensor/prj.conf`
 4. Rebuild both applications using their existing build configurations and confirm that both builds succeed before proceeding to any network test.
 
@@ -165,6 +175,8 @@ The actuator (light bulb) and sensor (light switch) need two DKs to test togethe
 Use **Erase and Flash to Board** for this first programming. It erases all non-volatile memory on the selected DK before flashing the application. On the nRF54L15, this memory is RRAM. This also clears persistent Thread settings left by the preloaded Demo.
 
 For later application updates, use the normal **Flash** action. It replaces the application without erasing the stored Thread settings, so the device can reuse its existing network credentials when it starts.
+
+> **Important:** Stored Thread settings take priority over the values in `prj.conf`. If you change any network credential (channel, PAN ID, extended PAN ID, network key, or network name) after the first programming, use **Erase and Flash to Board** again on both DKs. With the normal **Flash** action, the devices keep using the old network.
 
 ![Selecting Erase and Flash to Board for the actuator application](images/flash_app.png)
 
