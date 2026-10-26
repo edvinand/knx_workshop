@@ -21,6 +21,13 @@ A desktop launcher for Nordic development applications, including Programmer, Se
 
 - [Overview and download](https://www.nordicsemi.com/Products/Development-tools/nRF-Connect-for-Desktop)
 
+## nRF Thread Topology Monitor
+
+A desktop application that connects to a Thread network through a serial connection to a development kit or dongle running OpenThread CLI firmware. It shows the network topology in real time, including leaders, routers, and children, and lets you check device parameters and follow network events in the log. Use it to confirm that your devices have joined the same network. The connected device must use the same network credentials as the rest of the network. See the documentation for supported hardware.
+
+- [Overview and download](https://www.nordicsemi.com/Products/Development-tools/nRF-Thread-topology-monitor/Download)
+- [Documentation](https://docs.nordicsemi.com/bundle/ug_nrf_ttm/page/UG/nrf_ttm/ttm_introduction.html)
+
 ## Power Profiler Kit
 
 The Power Profiler Kit II (PPK2) is hardware for measuring a device's current consumption. Use it with the Power Profiler application in nRF Connect for Desktop to inspect sleep current and activity peaks, such as Thread polling and radio transmissions.
